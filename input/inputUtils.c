@@ -12,6 +12,8 @@ int stringToInt(char **str)
     return (ans);
   while (ft_isdigit(**str))
   {
+    if(ans > (DBL_MAX / 10))
+      printErrAndExit("float overflow\n");
     ans = ans * 10 + **str - '0';
     (*str)++;
   }
@@ -37,29 +39,27 @@ static int getSign(char **str)
 double ft_atod(char *str)
 {
   double ans;
-  double i;
+  double fraction;
   int sign;
-  char *head;
 
   if (!str)
     return 0;
   sign = getSign(&str);
   ans = 0;
+
   // 小数点前までintに変換
-  head = str;
   ans = stringToInt(&str);
-  if (head - str > 14)
-    printErrAndExit("Error: The number of significant digits in this program is limited to 15\n");
+  fraction = 0.0;
   // 小数点以下を計算
-  i = 0.1;
-  if (*str == '.')
-  {
-    str++;
-    while ((*str) && ft_isdigit(*str))
-    {
-      ans += (*str - '0') * i;
-      i *= 0.1;
-      str++;
+  if (*str == '.') {
+    ++str;
+    // 小数部分の処理
+    while (ft_isdigit(*str)) {
+        fraction *= 0.1;
+        if (ans > DBL_MAX - (*str - '0') * fraction)
+          printErrAndExit("float overflow\n");
+        ans += (*str - '0') * fraction;
+        ++str;
     }
   }
   return (sign * ans);

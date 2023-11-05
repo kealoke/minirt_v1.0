@@ -22,6 +22,4 @@ void parseLine(char *line, t_minirt *scene)
     setPlane(token, scene);
   else if (isMatch(token[0], "cy"))
     setCylinder(token, scene);
-  else
-    printErrAndExit("rt file identifer is invalid");
 }

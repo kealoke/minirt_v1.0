@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <sys/types.h>
+#include <float.h>
 
 #include "struct.h"
 #include "./input/input.h"

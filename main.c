@@ -13,10 +13,10 @@ int main(int argc, char **argv)
   bool flag;
   t_minirt scene;
 
-  initStruct(&scene);
   flag = inputCheck(argc, argv);
   if(flag == false)
     return (EXIT_FAILURE);
+  initStruct(&scene);
   openAndRead(argv[1], &scene);
 
 }

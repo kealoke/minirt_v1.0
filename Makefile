@@ -1,6 +1,6 @@
 NAME = minirt
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -MMD -MP -fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror -MMD -MP
 OBJ_DIR = ./objs
 SRC_DIR = ./input ./gnl
 
