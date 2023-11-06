@@ -12,7 +12,6 @@ bool fileIdentiferCheck(t_minirt *scene){
   return (flag);
 }
 
-
 // ファイルオープンして読み込む関数
 // 1: char *file -> 読み込みたいファイル
 // 2: t_minirt &scene -> 読み込んだ情報を格納する構造体

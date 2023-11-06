@@ -5,6 +5,8 @@
 // 2: t_minirt *scene -> 変換した値を入れるminirt構造体
 void setSphere(char **token, t_minirt *scene)
 {
+  if(!token[1] || !token[2] || !token[3])
+    printErrAndExit("Sphere value is not enough\n");
   if (scene->objs == NULL)
     scene->objs = my_malloc(sizeof(t_objects));
   scene->objs->sp = my_malloc(sizeof(t_sphere));
@@ -19,6 +21,9 @@ void setSphere(char **token, t_minirt *scene)
 void setPlane(char **token, t_minirt *scene)
 {
   bool flag;
+
+  if(!token[1] || !token[2] || !token[3])
+    printErrAndExit("Plane value is not enough\n");
   if (scene->objs == NULL)
     scene->objs = my_malloc(sizeof(t_objects));
   scene->objs->pl = my_malloc(sizeof(t_plane));
@@ -26,7 +31,6 @@ void setPlane(char **token, t_minirt *scene)
   setVec(token[2], &(scene->objs->pl->normal_vec));
   if (checkVecRange(scene->objs->pl->normal_vec) == false)
     printErrAndExit(PLANE_VEC_ERR);
-
   flag = setRGBcolor(token[3], &(scene->objs->pl->color));
   if (flag == false)
     printErrAndExit(PLANE_COLOR_ERR);
@@ -38,6 +42,9 @@ void setPlane(char **token, t_minirt *scene)
 void setCylinder(char **token, t_minirt *scene)
 {
   bool flag;
+
+  if(!token[1] || !token[2] || !token[3] || !token[4] || !token[5])
+    printErrAndExit("Cylinder value is not enough\n");
   if (scene->objs == NULL)
     scene->objs = my_malloc(sizeof(t_objects));
   scene->objs->cy = my_malloc(sizeof(t_cylinder));

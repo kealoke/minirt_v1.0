@@ -61,6 +61,8 @@ void setAmbient(char **token, t_minirt *scene)
 {
   bool flag;
 
+  if(!token[1] || !token[2])
+    printErrAndExit("Amiebt value is not enough\n");
   scene->amb = my_malloc(sizeof(t_ambient));
   scene->amb->light_range = ft_atod(token[1]);
   if (scene->amb->light_range < 0.0 || 1.0 < scene->amb->light_range)
@@ -75,6 +77,8 @@ void setAmbient(char **token, t_minirt *scene)
 // 2: t_minirt *scene -> 変換した値を入れるminirt構造体
 void setCamera(char **token, t_minirt *scene)
 {
+  if(!token[1] || !token[2] || !token[3])
+    printErrAndExit("Camera value is not enough\n");
   scene->cam = my_malloc(sizeof(t_camera));
   setVec(token[1], &(scene->cam->view_vec));
   setVec(token[2], &(scene->cam->ori_vec));
@@ -92,6 +96,8 @@ void setLight(char **token, t_minirt *scene)
 {
   int flag;
 
+  if(!token[1] || !token[2] || !token[3])
+    printErrAndExit("Light value is not enough\n");
   scene->light = my_malloc(sizeof(t_light));
   setVec(token[1], &(scene->light->point_vec));
   scene->light->brightness = ft_atod(token[2]);
