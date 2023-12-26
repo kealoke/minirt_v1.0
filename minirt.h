@@ -37,17 +37,19 @@ bool isMatch(char *s1, char *s2);
 
 bool inputCheck(int argc, char **argv);
 bool checkVecRange(t_vec vec);
-void parseLine(char *line, t_minirt *scene);
-void openAndRead(char *file, t_minirt *scene);
+void parseLine(char *line, t_minirt *global_info);
+void openAndRead(char *file, t_minirt *global_info);
 void setVec(char *str, t_vec *vec);
 bool setRGBcolor(char *str, t_color *color);
 bool setRGBcolor(char *str, t_color *color);
-void setAmbient(char **token, t_minirt *scene);
-void setCamera(char **token, t_minirt *scene);
-void setLight(char **token, t_minirt *scene);
-void setSphere(char **token, t_minirt *scene);
-void setPlane(char **token, t_minirt *scene);
-void setCylinder(char **token, t_minirt *scene);
+void setAmbient(char **token, t_minirt *global_info);
+void setCamera(char **token, t_minirt *global_info);
+void setLight(char **token, t_minirt *global_info);
+void setSphere(char **token, t_minirt *global_info);
+void setPlane(char **token, t_minirt *global_info);
+void setCylinder(char **token, t_minirt *global_info);
 void *my_malloc(size_t size);
 
+t_objects *objnew(void *content);
+int get_obj_size(t_objects *list);
 #endif

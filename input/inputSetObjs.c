@@ -2,59 +2,69 @@
 
 // tokenからt_sphere構造体に値を変換する関数
 // 1: char **token -> 変換したいtoken列
-// 2: t_minirt *scene -> 変換した値を入れるminirt構造体
-void setSphere(char **token, t_minirt *scene)
+// 2: t_minirt *global_info -> 変換した値を入れるminirt構造体
+void setSphere(char **token, t_minirt *global_info)
 {
+  t_sphere *sp;
+  t_objects *obj;
+
   if(!token[1] || !token[2] || !token[3])
     printErrAndExit("Sphere value is not enough\n");
-  if (scene->objs == NULL)
-    scene->objs = my_malloc(sizeof(t_objects));
-  scene->objs->sp = my_malloc(sizeof(t_sphere));
-  setVec(token[1], &(scene->objs->sp->center_vec));
-  scene->objs->sp->diameter = ft_atod(token[2]);
-  setRGBcolor(token[3], &(scene->objs->sp->color));
+  sp = my_malloc (sizeof(t_sphere));
+  setVec(token[1], &(sp->center_vec));
+  sp->diameter = ft_atod(token[2]);
+  setRGBcolor(token[3], &(sp->color));
+  obj = objnew(sp);
+  obj->obj_type = t_sp;
+  ft_lstadd_back(global_info->objs, obj);
 }
 
 // tokenからt_plane構造体に値を変換する関数
 // 1: char **token -> 変換したいtoken列
-// 2: t_minirt *scene -> 変換した値を入れるminirt構造体
-void setPlane(char **token, t_minirt *scene)
+// 2: t_minirt *global_info -> 変換した値を入れるminirt構造体
+void setPlane(char **token, t_minirt *global_info)
 {
   bool flag;
+  t_plane *pl;
+  t_objects *obj;
 
   if(!token[1] || !token[2] || !token[3])
     printErrAndExit("Plane value is not enough\n");
-  if (scene->objs == NULL)
-    scene->objs = my_malloc(sizeof(t_objects));
-  scene->objs->pl = my_malloc(sizeof(t_plane));
-  setVec(token[1], &(scene->objs->pl->point_vec));
-  setVec(token[2], &(scene->objs->pl->normal_vec));
-  if (checkVecRange(scene->objs->pl->normal_vec) == false)
+  pl = my_malloc(sizeof(t_plane));
+  setVec(token[1], &(pl->point_vec));
+  setVec(token[2], &(pl->normal_vec));
+  if (checkVecRange(pl->normal_vec) == false)
     printErrAndExit(PLANE_VEC_ERR);
-  flag = setRGBcolor(token[3], &(scene->objs->pl->color));
+  flag = setRGBcolor(token[3], &(pl->color));
   if (flag == false)
     printErrAndExit(PLANE_COLOR_ERR);
+  obj = objnew(pl);
+  obj->obj_type = t_pl;
+  ft_lstadd_back(global_info->objs, obj);
 }
 
 // tokenからt_cylinder構造体に値を変換する関数
 // 1: char **token -> 変換したいtoken列
-// 2: t_minirt *scene -> 変換した値を入れるminirt構造体
-void setCylinder(char **token, t_minirt *scene)
+// 2: t_minirt *global_info -> 変換した値を入れるminirt構造体
+void setCylinder(char **token, t_minirt *global_info)
 {
   bool flag;
+  t_cylinder *cy;
+  t_objects *obj;
 
   if(!token[1] || !token[2] || !token[3] || !token[4] || !token[5])
     printErrAndExit("Cylinder value is not enough\n");
-  if (scene->objs == NULL)
-    scene->objs = my_malloc(sizeof(t_objects));
-  scene->objs->cy = my_malloc(sizeof(t_cylinder));
-  setVec(token[1], &(scene->objs->cy->center_vec));
-  setVec(token[2], &(scene->objs->cy->axis_vec));
-  if (checkVecRange(scene->objs->cy->axis_vec) == false)
+  cy = my_malloc(sizeof(t_cylinder));
+  setVec(token[1], &(cy->center_vec));
+  setVec(token[2], &(cy->axis_vec));
+  if (checkVecRange(cy->axis_vec) == false)
     printErrAndExit(CY_AXIS_VEC_ERR);
-  scene->objs->cy->diameter = ft_atod(token[3]);
-  scene->objs->cy->height = ft_atod(token[4]);
-  flag = setRGBcolor(token[5], &(scene->objs->cy->color));
+  cy->diameter = ft_atod(token[3]);
+  cy->height = ft_atod(token[4]);
+  flag = setRGBcolor(token[5], &(cy->color));
   if (flag == false)
     printErrAndExit(CY_COLOR_ERR);
+  obj = objnew(cy);
+  obj->obj_type = t_cy;
+  ft_lstadd_back(global_info->objs, obj);
 }

@@ -1,12 +1,12 @@
 #include "../minirt.h"
 
-bool fileIdentiferCheck(t_minirt *scene){
+bool fileIdentiferCheck(t_minirt *global_info){
   bool flag;
 
   flag = true;
-  if(!scene->amb || !scene->cam || !scene->light)
+  if(!global_info->amb || !global_info->cam || !global_info->light)
     flag = false;
-  if(!scene->objs->cy && !scene->objs->pl && !scene->objs->sp)
+  if(!global_info->objs->cy && !global_info->objs->pl && !global_info->objs->sp)
     flag = false;
 
   return (flag);
@@ -14,8 +14,8 @@ bool fileIdentiferCheck(t_minirt *scene){
 
 // ファイルオープンして読み込む関数
 // 1: char *file -> 読み込みたいファイル
-// 2: t_minirt &scene -> 読み込んだ情報を格納する構造体
-void openAndRead(char *file, t_minirt *scene)
+// 2: t_minirt &global_info -> 読み込んだ情報を格納する構造体
+void openAndRead(char *file, t_minirt *global_info)
 {
   int fd;
   char *file_line;
@@ -30,9 +30,9 @@ void openAndRead(char *file, t_minirt *scene)
     file_line = get_next_line(fd);
     if (!file_line)
       break;
-    parseLine(file_line, scene);
+    parseLine(file_line, global_info);
   }
-  flag = fileIdentiferCheck(scene);
+  flag = fileIdentiferCheck(global_info);
   if(!flag)
     printErrAndExit("your rt file is missing some identifer\n");
 }

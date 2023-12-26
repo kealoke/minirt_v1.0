@@ -1,6 +1,11 @@
 #ifndef STRUCT_H
 #define STRUCT_H
 
+#define WIDTH 600
+#define HEIGHT 600
+
+#include "./libft/libft.h"
+
 // minilibxに必要な情報
 typedef struct s_libx
 {
@@ -56,6 +61,7 @@ typedef struct s_light
 
 } t_light;
 
+
 // 球体構造体
 // 1: t_vec center_vec -> 球の中心の座標ベクトル
 // 2: double diameter -> 球の直径
@@ -93,15 +99,27 @@ typedef struct s_cylinder
   t_color color;
 } t_cylinder;
 
+
+// どのオブジェクトか判別する
+typedef enum e_type_name
+{
+  t_sp,
+  t_pl,
+  t_cy
+
+}t_type_name;
+
 // 物体構造体
-// 1: t_sphere *sp ->球体構造体へのポインタ
-// 2: t_plane *pl ->平面構造体へのポインタ
-// 3: t_cylinder *cy -> 円柱構造体へのポインタ
+// 1: void *content -> オブジェクト構造体のポインタ(t_sphere or t_plane or t_cylinder)
+// 2: struct t_objects *next -> リストのポインタ
 typedef struct s_objects
 {
-  t_sphere *sp;
-  t_plane *pl;
-  t_cylinder *cy;
+  void *content;
+  t_type_name obj_type;
+  struct t_objects *next;
+
 } t_objects;
+
+
 
 #endif
