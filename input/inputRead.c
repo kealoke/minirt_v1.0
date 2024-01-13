@@ -6,7 +6,7 @@ bool fileIdentiferCheck(t_minirt *global_info){
   flag = true;
   if(!global_info->amb || !global_info->cam || !global_info->light)
     flag = false;
-  if(!global_info->objs->cy && !global_info->objs->pl && !global_info->objs->sp)
+  if(!global_info->objs->content)
     flag = false;
 
   return (flag);
