@@ -1,12 +1,14 @@
 NAME = minirt
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -MMD -MP
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -g
+OPTION = -lmlx -framework OpenGL -framework Appkit
 OBJ_DIR = ./objs
 SRC_DIR = ./input ./gnl
 
 SRCS = main.c \
-				get_next_line.c get_next_line_utils.c \
- 				inputCheck.c inputParse.c inputRead.c inputSet.c inputSetObjs.c inputUtils.c
+		get_next_line.c get_next_line_utils.c \
+ 		inputCheck.c inputParse.c inputRead.c inputSet.c inputSetObjs.c inputUtils.c \
+		draw.c mlx.c obj_list.c
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
 DEPS = $(OBJS:.o=.d)
 
@@ -26,7 +28,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 $(NAME): $(OBJS)
 	$(MAKE) -C ./libft
-	$(CC) $(CFLAGS) $^ -o $@ -L./libft -lft
+	$(CC) $(CFLAGS) $(OPTION) $(LIBFT) $^ -o $@ -fsanitize=address
 
 clean:
 	$(RM) -rf $(OBJ_DIR)

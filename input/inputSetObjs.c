@@ -16,7 +16,7 @@ void setSphere(char **token, t_minirt *global_info)
   setRGBcolor(token[3], &(sp->color));
   obj = objnew(sp);
   obj->obj_type = t_sp;
-  ft_lstadd_back(global_info->objs, obj);
+  ob_lstadd_back(&(global_info->objs), obj);
 }
 
 // tokenからt_plane構造体に値を変換する関数
@@ -40,7 +40,7 @@ void setPlane(char **token, t_minirt *global_info)
     printErrAndExit(PLANE_COLOR_ERR);
   obj = objnew(pl);
   obj->obj_type = t_pl;
-  ft_lstadd_back(global_info->objs, obj);
+  ob_lstadd_back(&(global_info->objs), obj);
 }
 
 // tokenからt_cylinder構造体に値を変換する関数
@@ -66,5 +66,5 @@ void setCylinder(char **token, t_minirt *global_info)
     printErrAndExit(CY_COLOR_ERR);
   obj = objnew(cy);
   obj->obj_type = t_cy;
-  ft_lstadd_back(global_info->objs, obj);
+  ob_lstadd_back(&(global_info->objs), obj);
 }

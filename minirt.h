@@ -6,12 +6,19 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <float.h>
+#include <math.h>
+#include <mlx.h>
 
 #include "struct.h"
 #include "./input/input.h"
 #include "errmsg.h"
 #include "./libft/libft.h"
 #include "./gnl/get_next_line.h"
+
+
+#define WIDTH 600
+#define HEIGHT 600
+
 
 //描写に必要な全体の情報をもつ
 //1: t_libx libs -> minilibxの情報
@@ -52,4 +59,11 @@ void *my_malloc(size_t size);
 
 t_objects *objnew(void *content);
 int get_obj_size(t_objects *list);
+void	ob_lstadd_back(t_objects **lst, t_objects *new);
+
+int	close_win(t_libx *data);
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void	ob_lstadd_back(t_objects **lst, t_objects *new);
+
+bool	draw(t_minirt *global_info);
 #endif
