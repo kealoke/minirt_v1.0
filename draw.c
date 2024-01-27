@@ -20,15 +20,14 @@ t_vec sub_vec(t_vec a, t_vec b){
 	return (res);
 }
 
-
 //color構図体からintに変換する
-int	argb_to_hex(t_color *color)
+int	argb_to_hex(t_color color)
 {
 	int	res_color;
 	int	a;
 
-	a = 255;
-	res_color = ((a & 0xFF) << 24) | ((color->r & 0xFF) << 16) | ((color->g & 0xFF) << 8) | (color->b & 0xFF);
+	a = 0;
+	res_color = ((a & 0xFF) << 24) | ((color.r & 0xFF) << 16) | ((color.g & 0xFF) << 8) | (color.b & 0xFF);
 	return (res_color);
 }
 
@@ -73,11 +72,12 @@ double	get_sp_test_condition(t_vec vec, double r, t_vec dir_vec)
 	// d_vec.y = y + 0.5 - vec.y;
 	// d_vec.z = 0 - r;
 	A = InnerProduct(dir_vec, dir_vec);
-	B2 = InnerProduct(vec, dir_vec);
+	B2 = InnerProduct(vec, dir_vec) * 2;
 	C = InnerProduct(vec, vec) - r * r;
-	D = B2 * B2 - A * C;
+	D = B2 * B2 - 4 * A * C;
+	// return D;
 	if (D >= 0)
-		return ((-B2 - sqrt(D)) / A);
+		return ((-B2 - sqrt(D)) / (2*A));
 	return (-1);
 }
 
@@ -89,10 +89,9 @@ double	sp_intersection(t_minirt *global_info, t_objects *tmp_o_list, t_vec dir_v
 	double		t;
 
 	sp_obj = tmp_o_list->content;
-	pvc.x = global_info->cam->view_vec.x - sp_obj->center_vec.x;
-	pvc.y = global_info->cam->view_vec.y - sp_obj->center_vec.y;
-	pvc.z = global_info->cam->view_vec.z - sp_obj->center_vec.z;
+	pvc = sub_vec(global_info->cam->view_vec, sp_obj->center_vec);
 	t = get_sp_test_condition(pvc, sp_obj->diameter, dir_vec);
+	// printf ("vec %f\n", sp_obj->center_vec.z);
 	return (t);
 }
 
@@ -109,12 +108,12 @@ t_vec	vec_normalize(t_vec a)
 
 
 //交点を計算する
-t_objects	*get_intersection(int x, int y, t_minirt *global_info, double *t)
+double get_intersection(int x, int y, t_minirt *global_info, double *t)
 {
 	int			i;
 	int			obj_size;
 	t_objects	*tmp_o_list;
-	double		tmp_t;
+	double		tmp_t = 0;
 	t_objects	*tmp_node;
 
 	i = 0;
@@ -131,9 +130,8 @@ t_objects	*get_intersection(int x, int y, t_minirt *global_info, double *t)
 	t_vec dir_vec;
 	dir_vec = vec_normalize(sub_vec(screen_vec, global_info->cam->view_vec));
 
-
 	//全てのオブジェクトに対して計算する
-	while (i < obj_size)
+	while (tmp_o_list != NULL)
 	{
 		if (tmp_o_list->obj_type == t_pl)
 		{
@@ -148,16 +146,16 @@ t_objects	*get_intersection(int x, int y, t_minirt *global_info, double *t)
 		// 	tmp_t = cy_intersecton();
 		// }
 		//tmp_t交点が，現在見つかっている最も近い交点よりも近いならその情報を記憶する
-		if (tmp_t < *t || i == 0)
-		{
-			*t = tmp_t;
-			tmp_node = tmp_o_list;
-		}
+		// if ((tmp_t < *t || i == 0) && 0 <= tmp_t)
+		// {
+		// 	*t = tmp_t;
+		// 	tmp_node = tmp_o_list;
+		// }
 		tmp_o_list = tmp_o_list->next;
 		i++;
 	}
 	// printf("%p\n", tmp_node);
-	return (tmp_node);
+	return (tmp_t);
 }
 
 
@@ -175,52 +173,40 @@ t_objects	*get_intersection(int x, int y, t_minirt *global_info, double *t)
 
 // }
 
-bool	draw(t_minirt *global_info)
+bool	draw(t_minirt *global_info, t_mlx *mlx)
 {
-	int x;
-	int y;
+	int  x;
+	int  y;
 	double t;
 	t_objects *node;
 
-	x = -(WIDTH);
-	y = -(HEIGHT);
-	node = NULL;
+	x = 0;
 
-	global_info->libs = my_malloc(sizeof(t_libx));
-	global_info->libs->data = my_malloc(sizeof(t_data));
-
-	global_info->libs->mlx = mlx_init();
-	global_info->libs->window = mlx_new_window(global_info->libs->mlx, WIDTH,
-			HEIGHT, "MiniRT");
-	global_info->libs->data->img = mlx_new_image(global_info->libs->mlx, WIDTH,
-			HEIGHT);
-	global_info->libs->data->addr = mlx_get_data_addr(global_info->libs->data->img,
-			&global_info->libs->data->bits_per_pixel,
-			&global_info->libs->data->line_length,
-			&global_info->libs->data->endian);
-
-	while (x <= WIDTH)
+	mlx->mlx = mlx_init();
+	mlx->window = mlx_new_window(mlx->mlx, WIDTH, HEIGHT, "MiniRT");
+	mlx->img = mlx_new_image(mlx->mlx, WIDTH, HEIGHT);
+	mlx->addr = mlx_get_data_addr(mlx->img, &(mlx->bits_per_pixel), &(mlx->line_length), &(mlx->endian));
+	while (x < WIDTH)
 	{
-		while (y <= HEIGHT)
+		y = 0;
+		while (y < HEIGHT)
 		{
+			node = NULL;
 			// 交点を計算する
-			node = get_intersection(x, y, global_info, &t);
+			t = get_intersection(x, y, global_info, &t);
 			//交点があれば
-			if (node)
+			if (0 <= t)
 			{
 				// int color = 0;
 
 				// if(node->obj_type == t_sp){
 				// 	t_sphere *sp_tmp = node->content;
-				// 	color = argb_to_hex(&(sp_tmp->color));
+				// 	color = argb_to_hex((sp_tmp->color));
 				// }
 				// else if(node->obj_type == t_pl){
 				// 	t_sphere *pl_tmp = node->content;
-				// 	color = argb_to_hex(&(pl_tmp->color));
+				// 	color = argb_to_hex((pl_tmp->color));
 				// }
-				// printf("%d\n", color);
-				my_mlx_pixel_put(global_info->libs->data, x + WIDTH / 2, y
-						+ HEIGHT / 2, 0xFFFFFF);
 				//環境光の反射光の放射輝度を計算して【放射輝度】に代入
 				//for(全ての光源について繰り返す) {
 				//      光源iによるライティングを計算する．
@@ -231,20 +217,23 @@ bool	draw(t_minirt *global_info)
 				//    }
 
 				//    【放射輝度】を色に変換して描画色に設定する．
+				my_mlx_pixel_put(mlx, x , y, 0x000000FF);
 			}
 			else
 			{
 				//背景
-				my_mlx_pixel_put(global_info->libs->data, x + WIDTH / 2, y
-						+ HEIGHT / 2, 0x000000);
+				my_mlx_pixel_put(mlx, x, y, 0x00FFFFFF);
 			}
+			// if( 100<x && x>200 && 100<y && y>100){
+
+			// 	my_mlx_pixel_put(mlx, x, y, 0x000000FF);
+			// }
 			y++;
 		}
 		x++;
 	}
-	mlx_put_image_to_window(global_info->libs->mlx, global_info->libs->window,
-			global_info->libs->data->img, 0, 0);
-	mlx_hook(global_info->libs->window, 17, 0, close_win, global_info->libs);
-	mlx_loop(global_info->libs->mlx);
+	mlx_put_image_to_window(mlx->mlx, mlx->window, mlx->img, 0, 0);
+	mlx_hook(mlx->window, 17, 0, close_win, mlx);
+	mlx_loop(mlx->mlx);
 	return (true);
 }

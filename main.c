@@ -1,17 +1,6 @@
 #include "minirt.h"
 
-void initStruct(t_minirt *global_info){
-  global_info->amb = NULL;
-  global_info->cam = NULL;
-  global_info->libs = NULL;
-  global_info->light = NULL;
-  global_info->objs = NULL;
-}
-
 // void global_init(t_minirt *global_info){
-
-
-
 
 // }
 
@@ -19,6 +8,7 @@ int main(int argc, char **argv)
 {
   bool flag;
   t_minirt global_info;
+  t_mlx mlx;
 
 
   flag = inputCheck(argc, argv);
@@ -27,9 +17,16 @@ int main(int argc, char **argv)
 
   // global_init(&global_info);
   // printf("%p\n", global_info.amb);
-  initStruct(&global_info);
+  // initStruct(&global_info);
   openAndRead(argv[1], &global_info);
 
-  draw(&global_info);
+  printf("%f\n", global_info.amb->light_range);
+  printf("%f\n", global_info.cam->view_vec.z);
+  printf("%u\n", global_info.light->color.b);
+  t_sphere *tmp = global_info.objs->content;
+  printf("%f\n", tmp->center_vec.z);
+
+
+  draw(&global_info, &mlx);
 
 }

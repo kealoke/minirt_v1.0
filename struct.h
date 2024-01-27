@@ -3,22 +3,26 @@
 
 #include "./libft/libft.h"
 
+//設定がされているかのフラグ
+typedef struct s_read_flags{
+  bool amb_f;
+  bool cam_f;
+  bool light_f;
+  bool obj_f;
+}t_read_flag;
 
-typedef struct	s_data {
-	void	*img;
+
+// minilibxに必要な情報
+typedef struct s_mlx
+{
+  void *mlx;
+  void *window;
+  void	*img;
 	char	*addr;
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
-}				t_data;
-
-// minilibxに必要な情報
-typedef struct s_libx
-{
-  void *mlx;
-  void *window;
-  t_data *data;
-} t_libx;
+} t_mlx;
 
 // ベクトル構造体
 typedef struct s_vec
@@ -31,9 +35,9 @@ typedef struct s_vec
 // RGBカラー構造体 range[0, 255]
 typedef struct s_color
 {
-  int r;
-  int g;
-  int b;
+  unsigned int r;
+  unsigned int g;
+  unsigned int b;
 } t_color;
 
 // 自然光構造体

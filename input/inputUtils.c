@@ -36,44 +36,45 @@ static int getSign(char **str)
 }
 
 // char文字列からdouble型に変換する関数
-double ft_atod(char *str)
-{
-  double ans;
-  double fraction;
-  int sign;
+double ft_atod(char *str) {
+    double ans;
+    double fraction;
+    int sign;
 
-  if (!str)
-    return 0;
-  sign = getSign(&str);
-  ans = 0;
+    if (!str)
+        return 0;
+    sign = getSign(&str);
+    ans = 0;
 
-  // 小数点前までintに変換
-  ans = stringToInt(&str);
-  fraction = 0.0;
-  // 小数点以下を計算
-  if (*str == '.') {
-    ++str;
-    // 小数部分の処理
-    while (ft_isdigit(*str)) {
-        fraction *= 0.1;
-        if (ans > DBL_MAX - (*str - '0') * fraction)
-          printErrAndExit("float overflow\n");
-        ans += (*str - '0') * fraction;
+    // 小数点前までintに変換
+    ans = stringToInt(&str);
+    fraction = 0.1; // 小数部分の処理のために初期化
+    // 小数点以下を計算
+    if (*str == '.') {
         ++str;
+        while (ft_isdigit(*str)) {
+            if (ans > DBL_MAX - (*str - '0') * fraction)
+                printErrAndExit("float overflow\n");
+            ans += (*str - '0') * fraction;
+            fraction *= 0.1;
+            ++str;
+        }
     }
-  }
-  return (sign * ans);
+    return (sign * ans);
 }
+
 
 //二つの文字列が要素と長さが完全に一致しているか確かめる関数
 bool isMatch(char *s1, char *s2)
 {
   if (!s1 || !s2)
     return (false);
-  if (ft_strlen(s1) != ft_strlen(s2))
+  if (ft_strlen(s1) != ft_strlen(s2)){
     return (false);
-  if (ft_strncmp(s1, s2, ft_strlen(s1)))
+  }
+  if (ft_strncmp(s1, s2, ft_strlen(s2)+1)){
     return (false);
+  }
   return (true);
 }
 

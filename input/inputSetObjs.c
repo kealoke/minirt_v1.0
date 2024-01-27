@@ -3,7 +3,7 @@
 // tokenからt_sphere構造体に値を変換する関数
 // 1: char **token -> 変換したいtoken列
 // 2: t_minirt *global_info -> 変換した値を入れるminirt構造体
-void setSphere(char **token, t_minirt *global_info)
+void setSphere(char **token, t_minirt *global_info, t_read_flag *flag)
 {
   t_sphere *sp;
   t_objects *obj;
@@ -17,14 +17,15 @@ void setSphere(char **token, t_minirt *global_info)
   obj = objnew(sp);
   obj->obj_type = t_sp;
   ob_lstadd_back(&(global_info->objs), obj);
+  flag->obj_f = true;
 }
 
 // tokenからt_plane構造体に値を変換する関数
 // 1: char **token -> 変換したいtoken列
 // 2: t_minirt *global_info -> 変換した値を入れるminirt構造体
-void setPlane(char **token, t_minirt *global_info)
+void setPlane(char **token, t_minirt *global_info, t_read_flag *flag)
 {
-  bool flag;
+  bool rgb_flag;
   t_plane *pl;
   t_objects *obj;
 
@@ -35,20 +36,21 @@ void setPlane(char **token, t_minirt *global_info)
   setVec(token[2], &(pl->normal_vec));
   if (checkVecRange(pl->normal_vec) == false)
     printErrAndExit(PLANE_VEC_ERR);
-  flag = setRGBcolor(token[3], &(pl->color));
+  rgb_flag = setRGBcolor(token[3], &(pl->color));
   if (flag == false)
     printErrAndExit(PLANE_COLOR_ERR);
   obj = objnew(pl);
   obj->obj_type = t_pl;
   ob_lstadd_back(&(global_info->objs), obj);
+  flag->obj_f = true;
 }
 
 // tokenからt_cylinder構造体に値を変換する関数
 // 1: char **token -> 変換したいtoken列
 // 2: t_minirt *global_info -> 変換した値を入れるminirt構造体
-void setCylinder(char **token, t_minirt *global_info)
+void setCylinder(char **token, t_minirt *global_info, t_read_flag *flag)
 {
-  bool flag;
+  bool rgb_flag;
   t_cylinder *cy;
   t_objects *obj;
 
@@ -61,10 +63,11 @@ void setCylinder(char **token, t_minirt *global_info)
     printErrAndExit(CY_AXIS_VEC_ERR);
   cy->diameter = ft_atod(token[3]);
   cy->height = ft_atod(token[4]);
-  flag = setRGBcolor(token[5], &(cy->color));
-  if (flag == false)
+  rgb_flag = setRGBcolor(token[5], &(cy->color));
+  if (rgb_flag == false)
     printErrAndExit(CY_COLOR_ERR);
   obj = objnew(cy);
   obj->obj_type = t_cy;
   ob_lstadd_back(&(global_info->objs), obj);
+  flag->obj_f = true;
 }

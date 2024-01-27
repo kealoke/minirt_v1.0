@@ -1,13 +1,13 @@
 #include "minirt.h"
 
-int	close_win(t_libx *data)
+int	close_win(t_mlx *data)
 {
 	mlx_destroy_window(data->mlx, data->window);
 	exit(1);
 	return (0);
 }
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+void	my_mlx_pixel_put(t_mlx *data, int x, int y, int color)
 {
 	char *dst;
 
