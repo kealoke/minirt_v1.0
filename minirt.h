@@ -64,4 +64,5 @@ void	my_mlx_pixel_put(t_mlx *data, int x, int y, int color);
 void	ob_lstadd_back(t_objects **lst, t_objects *new);
 
 bool	draw(t_minirt *global_info, t_mlx *mlx);
+bool	draw2(t_minirt *global_info, t_mlx *mlx);
 #endif

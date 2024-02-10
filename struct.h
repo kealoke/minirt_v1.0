@@ -132,5 +132,11 @@ typedef struct s_objects
 } t_objects;
 
 
+typedef struct s_draw_info{
+  t_color color;
+  t_vec notmal;
+
+}t_draw_info;
+
 
 #endif
