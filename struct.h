@@ -131,12 +131,18 @@ typedef struct s_objects
 
 } t_objects;
 
-
-typedef struct s_draw_info{
+//描写するオブジェクトのベクトル情報
+// 1: t_vec obj_normal -> 法線ベクトル
+// 2: t_vec light_dir -> 入射ベクトル
+// 3: t_color obj_color ->描写するオブジェクトのカラー
+typedef struct s_vec_info{
+  double t;
+  t_vec normal;
+  t_vec light_dir;
   t_color color;
-  t_vec notmal;
+}t_vec_info;
 
-}t_draw_info;
+
 
 
 #endif
