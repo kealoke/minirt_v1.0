@@ -2,8 +2,8 @@
 
 // lineをsplitして構造体に入力する関数
 // 1: char *line -> ファイルから読み込んだライン
-// 2: t_minirt *global_info -> 値を入力する構造体
-void parseLine(char *line, t_minirt *global_info, t_read_flag *flag)
+// 2: t_minirt *world -> 値を入力する構造体
+void parseLine(char *line, t_minirt *world, t_read_flag *flag)
 {
   char **token;
 
@@ -12,16 +12,16 @@ void parseLine(char *line, t_minirt *global_info, t_read_flag *flag)
   if (!token)
     return;
   if (isMatch(token[0], "A"))
-    setAmbient(token, global_info, flag);
+    setAmbient(token, world, flag);
   else if (isMatch(token[0], "C")){
-    setCamera(token, global_info, flag);
+    setCamera(token, world, flag);
   }
   else if (isMatch(token[0], "L"))
-    setLight(token, global_info, flag);
+    setLight(token, world, flag);
   else if (isMatch(token[0], "sp"))
-    setSphere(token, global_info, flag);
+    setSphere(token, world, flag);
   else if (isMatch(token[0], "pl"))
-    setPlane(token, global_info, flag);
+    setPlane(token, world, flag);
   else if (isMatch(token[0], "cy"))
-    setCylinder(token, global_info, flag);
+    setCylinder(token, world, flag);
 }

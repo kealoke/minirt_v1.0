@@ -58,18 +58,18 @@ bool setRGBcolor(char *str, t_color *color)
 
 // tokenからt_ambient構造体に値を変換する関数
 // 1: char **token -> 変換したいtoken列
-// 2: t_minirt *global_info -> 変換した値を入れるminirt構造体
-void setAmbient(char **token, t_minirt *global_info, t_read_flag *flag)
+// 2: t_minirt *world -> 変換した値を入れるminirt構造体
+void setAmbient(char **token, t_minirt *world, t_read_flag *flag)
 {
   bool rgb_flag;
 
   if(!token[1] || !token[2])
     printErrAndExit("Amiebt value is not enough\n");
-  global_info->amb = my_malloc(sizeof(t_ambient));
-  global_info->amb->light_range = ft_atod(token[1]);
-  if (global_info->amb->light_range < 0.0 || 1.0 < global_info->amb->light_range)
+  world->amb = my_malloc(sizeof(t_ambient));
+  world->amb->light_range = ft_atod(token[1]);
+  if (world->amb->light_range < 0.0 || 1.0 < world->amb->light_range)
     printErrAndExit(AMB_LIGHT_ERR);
-  rgb_flag = setRGBcolor(token[2], &(global_info->amb->color));
+  rgb_flag = setRGBcolor(token[2], &(world->amb->color));
   if (flag == false)
     printErrAndExit(AMB_COLOR_ERR);
   flag->amb_f = true;
@@ -77,37 +77,37 @@ void setAmbient(char **token, t_minirt *global_info, t_read_flag *flag)
 
 // tokenからカメラ構造体に変換する関数
 // 1: char **token -> 変換したいtoken列
-// 2: t_minirt *global_info -> 変換した値を入れるminirt構造体
-void setCamera(char **token, t_minirt *global_info, t_read_flag *flag)
+// 2: t_minirt *world -> 変換した値を入れるminirt構造体
+void setCamera(char **token, t_minirt *world, t_read_flag *flag)
 {
   if(!token[1] || !token[2] || !token[3])
     printErrAndExit("Camera value is not enough\n");
-    global_info->cam = my_malloc(sizeof(t_camera));
-  setVec(token[1], &(global_info->cam->view_vec));
-  setVec(token[2], &(global_info->cam->ori_vec));
-  if (checkVecRange(global_info->cam->ori_vec) == false)
+    world->cam = my_malloc(sizeof(t_camera));
+  setVec(token[1], &(world->cam->pos_vec));
+  setVec(token[2], &(world->cam->ori_vec));
+  if (checkVecRange(world->cam->ori_vec) == false)
     printErrAndExit(CAM_VEC_ERR);
-  global_info->cam->fov = ft_atoi(token[3]);
-  if (global_info->cam->fov < 0 || 180 < global_info->cam->fov)
+  world->cam->fov = ft_atoi(token[3]);
+  if (world->cam->fov < 0 || 180 < world->cam->fov)
     printErrAndExit(CAM_FOV_ERR);
   flag->cam_f = true;
 }
 
 // tokenからLight構造体に変換する関数
 //  1: char **token -> 変換したいtoken列
-//  2: t_minirt *global_info -> 変換した値を入れるminirt構造体
-void setLight(char **token, t_minirt *global_info, t_read_flag *flag)
+//  2: t_minirt *world -> 変換した値を入れるminirt構造体
+void setLight(char **token, t_minirt *world, t_read_flag *flag)
 {
   int rgb_flag;
 
   if(!token[1] || !token[2] || !token[3])
     printErrAndExit("Light value is not enough\n");
-    global_info->light = my_malloc(sizeof(t_light));
-  setVec(token[1], &(global_info->light->point_vec));
-  global_info->light->brightness = ft_atod(token[2]);
-  if (global_info->light->brightness < 0.0 || 1.0 < global_info->light->brightness)
+    world->light = my_malloc(sizeof(t_light));
+  setVec(token[1], &(world->light->pos_vec));
+  world->light->brightness = ft_atod(token[2]);
+  if (world->light->brightness < 0.0 || 1.0 < world->light->brightness)
     printErrAndExit(LIGHT_BRIGHT_ERR);
-  rgb_flag = setRGBcolor(token[3], &(global_info->light->color));
+  rgb_flag = setRGBcolor(token[3], &(world->light->color));
   if (flag == false)
     printErrAndExit(LIGHT_COLOR_ERR);
   flag->light_f = true;
