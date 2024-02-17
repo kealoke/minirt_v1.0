@@ -1,13 +1,13 @@
 #include "minirt.h"
 
-// void global_init(t_minirt *global_info){
+// void global_init(t_minirt *world){
 
 // }
 
 int main(int argc, char **argv)
 {
   bool flag;
-  t_minirt global_info;
+  t_minirt world;
   t_mlx mlx;
 
 
@@ -15,18 +15,18 @@ int main(int argc, char **argv)
   if(flag == false)
     return (EXIT_FAILURE);
 
-  // global_init(&global_info);
-  // printf("%p\n", global_info.amb);
-  // initStruct(&global_info);
-  openAndRead(argv[1], &global_info);
+  // global_init(&world);
+  // printf("%p\n", world.amb);
+  // initStruct(&world);
+  openAndRead(argv[1], &world);
 
-  printf("%f\n", global_info.amb->light_range);
-  printf("%f\n", global_info.cam->view_vec.z);
-  printf("%u\n", global_info.light->color.b);
-  t_sphere *tmp = global_info.objs->content;
-  printf("%f\n", tmp->center_vec.z);
+  // ("%f\n", world.amb->light_ranprintfge);
+  // printf("%f\n", world.cam->pos_vec.z);
+  // printf("%u\n", world.light->color.b);
+  // t_sphere *tmp = world.objs->content;
+  // printf("%f\n", tmp->center_vec.z);
 
 
-  draw(&global_info, &mlx);
+  draw(&world, &mlx);
 
 }

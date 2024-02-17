@@ -24,8 +24,8 @@ return true;
 
 // ファイルオープンして読み込む関数
 // 1: char *file -> 読み込みたいファイル
-// 2: t_minirt &global_info -> 読み込んだ情報を格納する構造体
-void openAndRead(char *file, t_minirt *global_info)
+// 2: t_minirt &world -> 読み込んだ情報を格納する構造体
+void openAndRead(char *file, t_minirt *world)
 {
   int fd;
   char *file_line;
@@ -41,7 +41,7 @@ void openAndRead(char *file, t_minirt *global_info)
     file_line = get_next_line(fd);
     if (!file_line)
       break;
-    parseLine(file_line, global_info, &flag);
+    parseLine(file_line, world, &flag);
   }
   ckeck_flag = fileIdentiferCheck(flag);
   if(!ckeck_flag)

@@ -50,23 +50,23 @@ typedef struct s_ambient
 } t_ambient;
 
 // カメラ構造体
-// 1: t_vec view_vec -> カメラの座標ベクトル
+// 1: t_vec pos_vec -> カメラの座標ベクトル
 // 2: t_vec ori_vec -> カメラの向きベクトル range[-1, 1]
 // 3: int fov -> カメラの視野角 range[0, 180]
 typedef struct s_camera
 {
-  t_vec view_vec;
+  t_vec pos_vec;
   t_vec ori_vec;
   int fov;
 } t_camera;
 
 // 光源構造体
-// 1: t_vec point_vec -> 光源の座標ベクトル
+// 1: t_vec pos_vec -> 光源の座標ベクトル
 // 2: double brightness -> 光源の明るさ range[0.0, 1.0]
 // 3: t_color color -> 光源の色
 typedef struct s_light
 {
-  t_vec point_vec;
+  t_vec pos_vec;
   double brightness;
   t_color color;
 
@@ -85,12 +85,12 @@ typedef struct s_sphere
 } t_sphere;
 
 // 平面構造体
-// 1: t_vec point_vec -> 平面の座標ベクトル
+// 1: t_vec pos_vec -> 平面の座標ベクトル
 // 2: t_vec normal_vec -> 平面の法線ベクトル range[-1, 1]
 // 3: t_color color -> 平面の色
 typedef struct s_plane
 {
-  t_vec point_vec;
+  t_vec pos_vec;
   t_vec normal_vec;
   t_color color;
 } t_plane;

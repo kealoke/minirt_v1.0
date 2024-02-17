@@ -12,6 +12,16 @@ double	InnerProduct(t_vec a, t_vec b)
 	return (a.x * b.x + a.y * b.y + a.z * b.z);
 }
 
+//外積
+t_vec crossProduct(t_vec a, t_vec b){
+	t_vec res;
+
+	res.x = a.y * b.z - a.z * b.y;
+	res.y = a.z * b.x - a.x * b.z;
+	res.z = a.x * b.y - a.y * b.x;
+	return (res);
+}
+
 //ベクトルの足し算
 t_vec add_vec(t_vec a, t_vec b){
 	t_vec res;
@@ -38,6 +48,24 @@ t_vec mul_vec(t_vec a, double b){
 	res.x = a.x * b;
 	res.y = a.y * b;
 	res.z = a.z * b;
+	return res;
+}
+
+t_color mul_color(t_color a, double b){
+	t_color res;
+
+	res.r = a.r * b;
+	res.g = a.g * b;
+	res.b = a.b * b;
+	return res;
+}
+
+t_color add_color(t_color a, t_color b){
+	t_color res;
+
+	res.r = a.r + b.r;
+	res.g = a.g + b.g;
+	res.b = a.b + b.b;
 	return res;
 }
 
@@ -72,27 +100,22 @@ int	argb_to_hex(t_color color)
 }
 
 //平面オブジェクトとレイの交差判定をする
-t_vec_info	pl_intersection(t_minirt *global_info, t_objects *tmp_o_list, t_vec dir_vec)
+t_vec_info	pl_intersection(t_minirt *world, t_objects *tmp_o_list, t_vec dir_vec)
 {
 	t_plane	*pl_obj;
 	t_vec	s_vec;
 	t_vec_info res;
-	// double	t;
 
 	pl_obj = tmp_o_list->content;
 	//視点（カメラ）と物体の距離
-	s_vec.x = global_info->cam->view_vec.x - pl_obj->point_vec.x;
-	s_vec.y = global_info->cam->view_vec.y - pl_obj->point_vec.y;
-	s_vec.z = global_info->cam->view_vec.z - pl_obj->point_vec.z;
-	// d_vec.x = x + 0.5 - s_vec.x;
-	// d_vec.y = y + 0.5 - s_vec.y;
-	// // d_vec.z = global_info->cam->view_vec.z
+	s_vec = sub_vec(world->cam->pos_vec, pl_obj->pos_vec);
+
 	res.t = -((InnerProduct(s_vec, pl_obj->normal_vec) / (InnerProduct(dir_vec, pl_obj->normal_vec))));
 	if(res.t > 0){
 		res.normal = pl_obj->normal_vec;
 		res.color = pl_obj->color;
-		t_vec init_pos = add_vec(global_info->cam->view_vec, mul_vec(dir_vec, res.t));
-		res.light_dir = vec_normalize(sub_vec(global_info->light->point_vec, init_pos));
+		t_vec init_pos_vec = add_vec(world->cam->pos_vec, mul_vec(dir_vec, res.t));
+		res.light_dir = vec_normalize(sub_vec(world->light->pos_vec, init_pos_vec));
 	}
 	return (res);
 }
@@ -104,16 +127,11 @@ double	get_sp_test_condition(t_vec vec, double r, t_vec dir_vec)
 	double	B;
 	double	C;
 	double	D;
-	// t_vec	d_vec;
 
-	// d_vec.x = x + 0.5 - vec.x;
-	// d_vec.y = y + 0.5 - vec.y;
-	// d_vec.z = 0 - r;
 	A = InnerProduct(dir_vec, dir_vec);
 	B = InnerProduct(vec, dir_vec) * 2;
 	C = InnerProduct(vec, vec) - r * r;
 	D = B * B - 4 * A * C;
-	// return D;
 	if(D == 0){
 		return (-B / (2*A));
 	}
@@ -121,14 +139,16 @@ double	get_sp_test_condition(t_vec vec, double r, t_vec dir_vec)
 		double t1 = (-B - sqrt(D)) / (2*A);
 		double t2 = (-B + sqrt(D)) / (2*A);
 		// カメラに近い方の交点を選択
-		if (t1 > 0 && t1 < t2) return t1;
-		if (t2 > 0) return t2;
+		if (t1 > 0 && t1 < t2)
+			return t1;
+		if (t2 > 0)
+			return t2;
 	}
 	return (D);
 }
 
 //球体のオブジェクトとレイの交差判定をしてベクトル情報を返す
-t_vec_info	sp_intersection(t_minirt *global_info, t_objects *tmp_o_list, t_vec dir_vec)
+t_vec_info	sp_intersection(t_minirt *world, t_objects *tmp_o_list, t_vec dir_vec)
 {
 	t_vec		pvc;
 	t_sphere	*sp_obj;
@@ -136,16 +156,16 @@ t_vec_info	sp_intersection(t_minirt *global_info, t_objects *tmp_o_list, t_vec d
 	t_vec_info res;
 
 	sp_obj = tmp_o_list->content;
-	pvc = sub_vec(global_info->cam->view_vec, sp_obj->center_vec);
+	pvc = sub_vec(world->cam->pos_vec, sp_obj->center_vec);
 	res.t = get_sp_test_condition(pvc, sp_obj->diameter, dir_vec);
 
 	if(res.t > 0){
 		//交点位置
-		t_vec init_pos = add_vec(global_info->cam->view_vec, mul_vec(dir_vec, res.t));
+		t_vec init_pos_vec = add_vec(world->cam->pos_vec, mul_vec(dir_vec, res.t));
 		// 法線ベクトル
-		res.normal = vec_normalize(sub_vec(init_pos, sp_obj->center_vec));
+		res.normal = vec_normalize(sub_vec(init_pos_vec, sp_obj->center_vec));
 		// 入射ベクトル
-		res.light_dir = vec_normalize(sub_vec(global_info->light->point_vec, init_pos));
+		res.light_dir = vec_normalize(sub_vec(world->light->pos_vec, init_pos_vec));
 		res.color = sp_obj->color;
 	}
 	return (res);
@@ -153,7 +173,7 @@ t_vec_info	sp_intersection(t_minirt *global_info, t_objects *tmp_o_list, t_vec d
 
 
 //交点を計算する
-t_vec_info get_intersection(t_minirt *global_info, t_vec dir_vec)
+t_vec_info get_intersection(t_minirt *world, t_vec dir_vec)
 {
 	t_objects	*tmp_o_list;
 	t_vec_info closest;
@@ -162,18 +182,18 @@ t_vec_info get_intersection(t_minirt *global_info, t_vec dir_vec)
 	closest.t = INFINITY; // 最も近い交点までの距離
     // t_objects *closest_obj = NULL; // 最も近いオブジェクト
 
-	tmp_o_list = global_info->objs;
+	tmp_o_list = world->objs;
 
 	//全てのオブジェクトに対して計算する
 	while (tmp_o_list != NULL)
 	{
 		if (tmp_o_list->obj_type == t_pl)
 		{
-			tmp = pl_intersection(global_info, tmp_o_list, dir_vec);
+			tmp = pl_intersection(world, tmp_o_list, dir_vec);
 		}
 		else if (tmp_o_list->obj_type == t_sp)
 		{
-			tmp = sp_intersection(global_info, tmp_o_list, dir_vec);
+			tmp = sp_intersection(world, tmp_o_list, dir_vec);
 		}
 		// 円柱
 		// else if(tmp_o_list->obj_type == t_cy){
@@ -192,25 +212,8 @@ t_vec_info get_intersection(t_minirt *global_info, t_vec dir_vec)
 }
 
 
-// int set_obj_lighting(t_minirt *global_info, double t, t_objects *node){
-// 	t_vec *p;
-// 	t_vec *n;
-// 	int i;
 
-// 	//視点と物体の交点を計算する
-// 	p = plus_vec(global_info->cam->view_vec, global_info->cam->ori_vec, t);
-// 	//法線
-// 	if(node->obj_type == )
-// 	n = minus_vec(p, )
-
-
-// }
-
-void calculate_ref(){
-
-}
-
-bool	draw(t_minirt *global_info, t_mlx *mlx)
+bool	draw(t_minirt *world, t_mlx *mlx)
 {
 	int  x;
 	int  y;
@@ -223,87 +226,108 @@ bool	draw(t_minirt *global_info, t_mlx *mlx)
 	mlx->img = mlx_new_image(mlx->mlx, WIDTH, HEIGHT);
 	mlx->addr = mlx_get_data_addr(mlx->img, &(mlx->bits_per_pixel), &(mlx->line_length), &(mlx->endian));
 
+	// カメラからスクリーンまでの距離
+	double d = WIDTH / 2 / tan((world->cam->fov / 2)/ 180 * M_PI);
+	// カメラからスクリーンの中心へのベクトル
+	t_vec dsc = mul_vec(world->cam->ori_vec, d);
+
+	// スクリーンの基底ベクトル
+	t_vec esx;
+	esx.x = dsc.z / sqrt(dsc.z * dsc.z + dsc.x * dsc.x);
+	esx.y = 0;
+	esx.z = -dsc.x / sqrt(dsc.z * dsc.z + dsc.x * dsc.x);
+	t_vec esy;
+	esy = vec_normalize(crossProduct(mul_vec(dsc, -1), esx));
+
 	x = 0;
 	while (x < WIDTH)
 	{
 		y = 0;
 		while (y < HEIGHT)
 		{
-			//ワールドベクトルに変換する
-			t_vec screen_vec;
-			screen_vec.x = 2 * x / (WIDTH - 1.0);
-			screen_vec.y = 2 * y / (HEIGHT - 1.0);
-			screen_vec.z = 0;
-			// 方向ベクトル
-			t_vec dir_vec;
-			dir_vec = vec_normalize(sub_vec(screen_vec, global_info->cam->view_vec));
+			double screen_w = x - (WIDTH - 1)/ 2;
+			double screen_h = (HEIGHT - 1) / 2 - y;
+			t_vec x_vec = mul_vec(esx, screen_w);
+			t_vec y_vec = mul_vec(esy, screen_h);
+			t_vec dir_vec = vec_normalize(add_vec(dsc, add_vec(x_vec, y_vec)));
+
+
+			// //ワールドベクトルに変換する(fovや位置変換ができないversion)
+			// t_vec screen_vec;
+			// screen_vec.x = 2 * x / (WIDTH - 1.0);
+			// screen_vec.y = 2 * y / (HEIGHT - 1.0);
+			// screen_vec.z = 0;
+			// // 方向ベクトル
+			// t_vec dir_vec;
+			// dir_vec = vec_normalize(sub_vec(screen_vec, world->cam->pos_vec));
 
 			// 視点とぶつかるオブジェクトを計算する
-			closest_obj = get_intersection(global_info, dir_vec);
+			closest_obj = get_intersection(world, dir_vec);
 			//交点があれば
 			if (closest_obj.t > 0)
 			{
 				//環境光の放射輝度
 				double ambient_ref;
-				double ambient_k = 1;
-				ambient_ref = ambient_k * global_info->amb->light_range;
+				double ambient_k = 0.01;
+				t_color amb_color;
+				ambient_ref = ambient_k * world->amb->light_range;
+				amb_color = mul_color(world->amb->color, ambient_ref);
+
+
 				//拡散反射の放射輝度
 				double diffuse_ref;
-				double diffuse_k = 1;
+				double diffuse_k = 0.5;
+				t_color dif_color;
 				double nl = InnerProduct(closest_obj.light_dir, closest_obj.normal);
 				if(nl < 0)
 					nl = 0;
-				diffuse_ref = global_info->light->brightness * diffuse_k * nl;
+				diffuse_ref = diffuse_k * nl;
+				//物体のカラーと拡散反射の輝度をかける
+				dif_color = mul_color(closest_obj.color, diffuse_ref);
+
 				//鏡面反射の放射輝度
 				double supecular_ref;
-				double supecular_k = 1;
+				double supecular_k = 0.3;
+				t_color sup_color;
 				if(nl > 0){
 					//正反射ベクトルを求める
 					t_vec r;
-					r.x = closest_obj.light_dir.x - 2 * nl * closest_obj.normal.x;
-					r.y = closest_obj.light_dir.y - 2 * nl * closest_obj.normal.y;
-					r.z = closest_obj.light_dir.z - 2 * nl * closest_obj.normal.z;
+					r = sub_vec(mul_vec(mul_vec(closest_obj.normal, nl),2), closest_obj.light_dir);
+					// r.x = 2 * nl * closest_obj.normal.x - closest_obj.light_dir.x;
+					// r.y = 2 * nl * closest_obj.normal.y - closest_obj.light_dir.y;
+					// r.z = 2 * nl * closest_obj.normal.z - closest_obj.light_dir.z;
+
 					//視線ベクトルの逆ベクトル
-					t_vec v = vec_normalize(mul_vec(dir_vec, -1));
+					t_vec v = (mul_vec(dir_vec, -1));
 					double vr = InnerProduct(v, r);
+
 					if(vr < 0)
 						vr = 0;
-					supecular_ref = global_info->light->brightness * supecular_k * pow(vr, 5.0);
+					supecular_ref = world->light->brightness * supecular_k * pow(vr, 10.0);
+
 				}
 				else{
 					supecular_ref = 0;
 				}
-				double ref_light = diffuse_ref + supecular_ref;
-				// double ref_light =  diffuse_ref;
+				sup_color = mul_color(world->light->color,supecular_ref);
 
+				//環境光と鏡面反射のカラーを加える
+				t_color final_color =  add_color(add_color(amb_color,dif_color),sup_color);
 
-				closest_obj.color.r *= ref_light;
-				closest_obj.color.g *= ref_light;
-				closest_obj.color.b *= ref_light;
+				// rgbを0-255の範囲に抑える
+				final_color.r = clamp(final_color.r, 0, 255);
+				final_color.g = clamp(final_color.g, 0, 255);
+				final_color.b = clamp(final_color.b, 0, 255);
 
-				color = argb_to_hex((closest_obj.color));
+				color = argb_to_hex(final_color);
 
-				//環境光の反射光の放射輝度を計算して【放射輝度】に代入
-				//for(全ての光源について繰り返す) {
-				//      光源iによるライティングを計算する．
-
-				//      光源iからの光の拡散反射光の放射輝度を計算して【放射輝度】に加算する．
-
-				//      光源iからの光の鏡面反射光の放射輝度を計算して【放射輝度】に加算する．
-				//    }
-
-				//    【放射輝度】を色に変換して描画色に設定する．
 				my_mlx_pixel_put(mlx, x , y, color);
 			}
 			else
 			{
 				//背景
-				my_mlx_pixel_put(mlx, x, y, 0x00000000);
+				my_mlx_pixel_put(mlx, x, y, 0x006492ed);
 			}
-			// if( 100<x && x>200 && 100<y && y>100){
-
-			// 	my_mlx_pixel_put(mlx, x, y, 0x000000FF);
-			// }
 			y++;
 		}
 		x++;
@@ -313,83 +337,3 @@ bool	draw(t_minirt *global_info, t_mlx *mlx)
 	mlx_loop(mlx->mlx);
 	return (true);
 }
-
-// bool	draw2(t_minirt *global_info, t_mlx *mlx)
-// {
-// 	int  x;
-// 	int  y;
-// 	// double t;
-// 	// double ttt;
-// 	t_objects *node;
-// 	// int			i;
-// 	int			obj_size;
-// 	t_objects	*tmp_o_list;
-// 	// double		tmp_t = 0;
-// 	t_objects	*tmp_node;
-// 	t_vec		pvc;
-// 	t_sphere	*sp_obj;
-// 	double	A;
-// 	double	B2;
-// 	double	C;
-// 	double	D= -1;
-
-// 	x = 0;
-
-// 	mlx->mlx = mlx_init();
-// 	mlx->window = mlx_new_window(mlx->mlx, WIDTH, HEIGHT, "MiniRT");
-// 	mlx->img = mlx_new_image(mlx->mlx, WIDTH, HEIGHT);
-// 	mlx->addr = mlx_get_data_addr(mlx->img, &(mlx->bits_per_pixel), &(mlx->line_length), &(mlx->endian));
-// 	while (x < WIDTH)
-// 	{
-// 		y = 0;
-// 		while (y < HEIGHT)
-// 		{
-// 			D = -1;
-// 			node = NULL;
-// 			tmp_o_list = global_info->objs;
-// 			obj_size = get_obj_size(tmp_o_list);
-// 			tmp_node = NULL;
-
-// 			t_vec screen_vec;
-// 			screen_vec.x = 2 * x / (WIDTH - 1.0);
-// 			screen_vec.y = 2 * y / (HEIGHT - 1.0);
-// 			screen_vec.z = 0;
-// 			// 方向ベクトル
-// 			t_vec dir_vec;
-// 			dir_vec = vec_normalize(sub_vec(screen_vec, global_info->cam->view_vec));
-
-// 			while (tmp_o_list != NULL)
-// 			{
-// 				if (tmp_o_list->obj_type == t_sp)
-// 				{
-// 					sp_obj = tmp_o_list->content;
-// 					pvc = sub_vec(global_info->cam->view_vec, sp_obj->center_vec);
-
-// 					A = vec_get_norm(dir_vec) * vec_get_norm(dir_vec);
-// 					B2 = InnerProduct(pvc, dir_vec) * 2;
-// 					C = InnerProduct(pvc, pvc) - sp_obj->diameter * sp_obj->diameter;
-// 					D = B2 * B2 - 4 * A * C;
-// 				}
-// 				tmp_o_list = tmp_o_list->next;
-// 			}
-// 			if(D >= 0){
-// 				my_mlx_pixel_put(mlx, x , y, 0x000000FF);
-// 			}
-// 			else
-// 			{
-// 				//背景
-// 				my_mlx_pixel_put(mlx, x, y, 0x00FFFFFF);
-// 			}
-// 			// if( 100<x && x>200 && 100<y && y>100){
-
-// 			// 	my_mlx_pixel_put(mlx, x, y, 0x000000FF);
-// 			// }
-// 			y++;
-// 		}
-// 		x++;
-// 	}
-// 	mlx_put_image_to_window(mlx->mlx, mlx->window, mlx->img, 0, 0);
-// 	mlx_hook(mlx->window, 17, 0, close_win, mlx);
-// 	mlx_loop(mlx->mlx);
-// 	return (true);
-// }
