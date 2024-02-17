@@ -172,6 +172,56 @@ t_vec_info	sp_intersection(t_minirt *world, t_objects *tmp_o_list, t_vec dir_vec
 }
 
 
+
+t_vec_info cy_intersecton(t_minirt *world, t_objects *tmp_o_list, t_vec dir_vec) {
+	t_vec		pvc;
+	t_cylinder	*cy_obj;
+
+	cy_obj = tmp_o_list->content;
+	pvc = sub_vec(world->cam->pos_vec, cy_obj->center_vec);
+	double A;
+	double B;
+	double C;
+	double D;
+	double r = cy_obj->diameter / 2;
+	double harf_h = cy_obj->height / 2;
+	double t;
+	double y;
+
+	A = dir_vec.x * dir_vec.x + dir_vec.z * dir_vec.z;
+	B = 2 * (pvc.x * dir_vec.x + pvc.z * dir_vec.z);
+	C = pvc.x * pvc.x + pvc.y * pvc.y - r * r;
+
+	D = B * B - 4 * A * C;
+	// Dが０以上なら交点を持つ、0以上かつy軸距離が[−ℎ2,ℎ2]の範囲内である場合のみ交点を持つ
+	if(D == 0){
+		t = (-B / (2*A));
+	}
+	else if (D > 0){
+		double t1 = (-B - sqrt(D)) / (2*A);
+		double t2 = (-B + sqrt(D)) / (2*A);
+		// カメラに近い方の交点を選択
+		if (t1 > 0 && t1 < t2)
+			t =  t1;
+		else if (t2 > 0)
+			t =  t2;
+		else 
+			t = -1;
+	} else {
+		t = -1;
+	}
+	if (D >= 0 && t > 0) {
+		y = world->cam->pos_vec.y + t * dir_vec.y;
+		double diff = cy_obj->center_vec.y - y;
+		// 交点あり
+		if (-harf_h < diff && diff < harf_h) {
+
+		}
+	}
+
+}
+
+
 //交点を計算する
 t_vec_info get_intersection(t_minirt *world, t_vec dir_vec)
 {
@@ -196,9 +246,9 @@ t_vec_info get_intersection(t_minirt *world, t_vec dir_vec)
 			tmp = sp_intersection(world, tmp_o_list, dir_vec);
 		}
 		// 円柱
-		// else if(tmp_o_list->obj_type == t_cy){
-		// 	tmp_t = cy_intersecton();
-		// }
+		else if(tmp_o_list->obj_type == t_cy){
+			tmp = cy_intersecton(world, tmp_o_list, dir_vec);
+		}
 		//tmp_t交点が，現在見つかっている最も近い交点よりも近いならその情報を記憶する
 		if (tmp.t > 0 && tmp.t < closest.t)
         {
