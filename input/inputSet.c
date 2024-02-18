@@ -21,6 +21,8 @@ t_light_color convert_color(t_color rgb){
   light_c.r = ((double)rgb.r)/255.0;
   light_c.g = ((double)rgb.g)/255.0;
   light_c.b = ((double)rgb.b)/255.0;
+
+  printf("rgb %f %f %f\n", light_c.r,light_c.g, light_c.b);
   return (light_c);
 }
 
