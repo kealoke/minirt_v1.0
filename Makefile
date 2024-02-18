@@ -1,6 +1,6 @@
 NAME = minirt
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -MMD -MP -g
+CFLAGS =  -MMD -MP -g
 OPTION = -lmlx -framework OpenGL -framework Appkit
 OBJ_DIR = ./objs
 SRC_DIR = ./input ./gnl ./render

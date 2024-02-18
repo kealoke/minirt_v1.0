@@ -57,17 +57,8 @@ double	get_sp_test_condition(t_vec vec, double r, t_vec dir_vec)
 	b = InnerProduct(vec, dir_vec) * 2;
 	c = InnerProduct(vec, vec) - r * r;
 	d = b * b - 4 * a * c;
-	if(d == 0){
+	if(d >= 0){
 		return ((-b - sqrt(d)) / (2*a));
-	}
-	else if (d > 0){
-		double t1 = (-b - sqrt(d)) / (2*a);
-		double t2 = (-b + sqrt(d)) / (2*a);
-		// カメラに近い方の交点を選択
-		if (t1 > 0 && t1 < t2)
-			return t1;
-		if (t2 > 0)
-			return t2;
 	}
 	return (d);
 }
@@ -144,14 +135,14 @@ t_vec_info get_intersection(t_minirt *world, t_ray ray)
 
 
 //環境光の放射輝度を反映したカラーを取得
-t_color get_ambient(t_minirt *world){
+double get_ambient(t_minirt *world){
 	t_light_color amb_color;
 	t_color res;
 	// double r;
 	// double g;
 	// double b;
 	double ambient_ref;
-	double ambient_k = 0.1;
+	double ambient_k = 1;
 
 	ambient_ref = ambient_k * world->amb->light_intensity;
 
@@ -161,15 +152,16 @@ t_color get_ambient(t_minirt *world){
 	amb_color = mul_li_color(world->amb->color, ambient_ref);
 
 	res = sca_mul_color(get_color_vec(255,255,255), ambient_ref);
-	return res;
+	return ambient_ref;
+	// return res;
 }
 
 //拡散反射の放射輝度を反映したカラーを取得
-t_color get_diffuse(t_minirt *world, t_vec_info closest_obj){
+double get_diffuse(t_minirt *world, t_vec_info closest_obj){
 	t_light_color dif_color;
 	t_color res;
 	double diffuse_ref;
-	double diffuse_k = 0.5;
+	double diffuse_k = 1;
 
 	double nl = InnerProduct(closest_obj.light_dir, closest_obj.normal);
 	if(nl < 0)
@@ -185,14 +177,15 @@ t_color get_diffuse(t_minirt *world, t_vec_info closest_obj){
 	// dif_color = mul_li_ob(dif_color, closest_obj.color);
 	res = sca_mul_color(get_color_vec(255,255,255), diffuse_ref);
 
-	return res;
+	// return res;
+	return diffuse_ref;
 }
 
-t_color get_supecular(t_minirt *world, t_vec_info closest_obj, t_vec dir_vec){
+double get_supecular(t_minirt *world, t_vec_info closest_obj, t_vec dir_vec){
 
 	//鏡面反射の放射輝度
 	double supecular_ref;
-	double supecular_k = 0.3;
+	double supecular_k = 1;
 	t_light_color sup_color;
 	t_color res;
 
@@ -213,10 +206,8 @@ t_color get_supecular(t_minirt *world, t_vec_info closest_obj, t_vec dir_vec){
 	else{
 		supecular_ref = 0;
 	}
-	sup_color = mul_li_color(world->light->color, supecular_ref);
-	res = sca_mul_color(get_color_vec(255,255,255), supecular_ref);
-
-	return res;
+	return supecular_ref;
+	// return res;
 }
 
 //物体にシャドウがかかるかチェックする
@@ -225,6 +216,7 @@ bool check_shadow(t_minirt *world, t_vec_info obj){
 
 	// 交点から光源までのベクトル
 	t_vec  i_to_l = sub_vec(world->light->pos_vec, obj.inter_pos);
+
 	shadow_ray.dir = vec_normalize(i_to_l);
 	shadow_ray.pos = add_vec(obj.inter_pos,mul_vec(shadow_ray.dir, EPSILON));
 	double d_to_light = norm_vec(i_to_l) - EPSILON;
@@ -240,9 +232,9 @@ bool check_shadow(t_minirt *world, t_vec_info obj){
 	//全てのオブジェクトに対して計算する
 	while (tmp_o_list != NULL)
 	{
-		// tmp = calc_intersection(world, *tmp_o_list, shadow_ray);
-		tmp = get_intersection(world, shadow_ray);
-		if (tmp.t > 0 && tmp.t <= d_to_light)
+		// tmp = get_intersection(world, shadow_ray);
+		tmp = calc_intersection(world, *tmp_o_list, shadow_ray);
+		if (tmp.t >= 0 && tmp.t <= d_to_light)
         {
             return true;
         }
@@ -265,6 +257,12 @@ bool	draw(t_minirt *world, t_mlx *mlx)
 	t_color final_color;
 	t_color ref_color;
 
+	double rr, ra, rd, rs;
+	t_color tmp_light;
+	tmp_light.r =255;
+	tmp_light.g =255;
+	tmp_light.b =255;
+
 
 	mlx->mlx = mlx_init();
 	mlx->window = mlx_new_window(mlx->mlx, WIDTH, HEIGHT, "MiniRT");
@@ -286,7 +284,10 @@ bool	draw(t_minirt *world, t_mlx *mlx)
 	t_vec esy;
 	esy = vec_normalize(crossProduct(dsc, esx));
 
-	amb_color = get_ambient(world);
+	//環境光
+	// amb_color = get_ambient(world);
+	ra = get_ambient(world);
+	rr = 1;
 	// printf("amb_color %u, %u, %u\n",amb_color.r, amb_color.g, amb_color.b);
 	// printf("%f\n", ((double)255)/255.0 * 0.1 * world->amb->light_intensity);
 
@@ -311,32 +312,25 @@ bool	draw(t_minirt *world, t_mlx *mlx)
 			if (closest_obj.t > 0)
 			{
 				if (check_shadow(world, closest_obj) == true){
-					// final_color = sca_mul_color(closest_obj.color,world->amb->light_intensity);
-					// printf("shadow color %u, %u, %u\n",final_color.r,final_color.g,final_color.b);
-					final_color = mul_color(closest_obj.color, amb_color);
+					rr = ra;
 				}
 				else{
-					//環境光と鏡面反射のカラーを加える
-					dif_color = get_diffuse(world, closest_obj);
-					sup_color = get_supecular(world, closest_obj, ray.dir);
-					ref_color =  add_color(add_color(amb_color,dif_color),sup_color);
-					final_color =  mul_color(closest_obj.color,ref_color);
-					// final_color =  add_color(closest_obj.color,add_color(add_color(amb_color,dif_color),sup_color));
-					// ref_color =  add_li_color(add_li_color(amb_color,dif_color),sup_color);
-					// printf("ref %f,%f,%f\n",ref_color.r, ref_color.g, ref_color.b);
-					// final_color = mul_ob_li(closest_obj.color, ref_color);
+					//環境光と鏡面反射を加える
+					printf("spspsp %u %u %u\n",closest_obj.color.r, closest_obj.color.g, closest_obj.color.b);
+					rd =  get_diffuse(world, closest_obj);
+					rs = get_supecular(world, closest_obj, ray.dir);
+					rr = ra + rd + rs;
 				}
-					// dif_color = get_diffuse(world, closest_obj);
-					// sup_color = get_supecular(world, closest_obj, ray.dir);
-					// ref_color =  add_color(add_color(amb_color,dif_color),sup_color);
-					// printf("ref color %u,%u,%u", ref_color.r, ref_color.g, ref_color.b);
-					// final_color =  mul_color(closest_obj.color,ref_color);
+				final_color = mul_color(sca_mul_color(closest_obj.color,rr),tmp_light);
 
-				// rgbを0-255の範囲に抑える
 				final_color.r = final_color.r/255;
 				final_color.g = final_color.g/255;
 				final_color.b = final_color.b/255;
-				printf("final color %u, %u, %u\n",final_color.r, final_color.g, final_color.b);
+
+				// rgbを0-255の範囲に抑える
+				final_color.r = clamp(final_color.r, 0, 255);
+				final_color.g = clamp(final_color.g, 0, 255);
+				final_color.b = clamp(final_color.b, 0, 255);
 
 				color = argb_to_hex(final_color);
 
