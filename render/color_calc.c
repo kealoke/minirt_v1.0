@@ -20,13 +20,23 @@ t_light_color mul_li_color(t_light_color a, double b){
 	return res;
 }
 
-//ライトカラーとオブジェクトカラーの掛け算
-t_color mul_li_ob(t_light_color light, t_color obj){
+//オブジェクトとライトの掛け算(t_colorで返す)
+t_color mul_ob_li(t_color obj, t_light_color light){
 	t_color res;
 
-	res.r = light.r * obj.r;
-	res.g = light.g * obj.g;
-	res.b = light.b * obj.b;
+	res.r = (unsigned int)light.r * obj.r;
+	res.g = (unsigned int)light.g * obj.g;
+	res.b = (unsigned int)light.b * obj.b;
+	return res;
+}
+
+// ライトとオブジェクトの掛け算(t_lightcolorで返す)
+t_light_color mul_li_ob(t_light_color light, t_color obj){
+	t_light_color res;
+
+	res.r = light.r * (double)obj.r;
+	res.g = light.g * (double)obj.g;
+	res.b = light.b * (double)obj.b;
 	return res;
 }
 

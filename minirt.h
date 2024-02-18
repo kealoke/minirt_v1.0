@@ -83,6 +83,7 @@ t_color add_color(t_color a, t_color b);
 int	argb_to_hex(t_color color);
 t_color get_color_vec(unsigned int red, unsigned int green, unsigned int blue);
 t_light_color mul_li_color(t_light_color a, double b);
-t_color mul_li_ob(t_light_color light, t_color obj);
+t_color mul_ob_li(t_color obj,t_light_color light);
+t_light_color mul_li_ob(t_light_color light, t_color obj);
 t_light_color add_li_color(t_light_color a, t_light_color b);
 #endif

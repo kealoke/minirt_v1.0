@@ -40,13 +40,13 @@ typedef struct s_color
 	unsigned int		b;
 }						t_color;
 
-
+//ライトのカラー情報 (/255.0 した値　[0-1])
 typedef struct s_light_color
 {
 	double r;
 	double g;
 	double b;
-	/* data */
+
 }t_light_color;
 
 // 自然光構造体
@@ -146,13 +146,15 @@ typedef struct s_objects
 typedef struct s_vec_info
 {
 	double				t;
-  t_vec       inter_pos;
+  	t_vec       		inter_pos;
 	t_vec				normal;
 	t_vec				light_dir;
 	t_color				color;
 }						t_vec_info;
 
-//レイトレーシングの計算に使うray情報
+//レイトレーシングの計算に使うrayのベクトル情報
+//1: t_vec pos -> レイの位置ベクトル
+//2: t_vec dir -> レイの方向ベクトル
 typedef struct s_ray
 {
   t_vec pos;
