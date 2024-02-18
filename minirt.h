@@ -19,6 +19,10 @@
 #define WIDTH 800
 #define HEIGHT 800
 
+#define EPSILON 1.0/128.0
+
+#define BACK_COLOR 0x00000000
+
 
 //描写に必要な全体の情報をもつ
 //2: t_ambient amb -> 自然光情報
@@ -64,5 +68,21 @@ void	my_mlx_pixel_put(t_mlx *data, int x, int y, int color);
 void	ob_lstadd_back(t_objects **lst, t_objects *new);
 
 bool	draw(t_minirt *world, t_mlx *mlx);
-bool	draw2(t_minirt *world, t_mlx *mlx);
+
+
+double	InnerProduct(t_vec a, t_vec b);
+t_vec	crossProduct(t_vec a, t_vec b);
+t_vec	add_vec(t_vec a, t_vec b);
+t_vec	sub_vec(t_vec a, t_vec b);
+t_vec	mul_vec(t_vec a, double b);
+double	norm_vec(t_vec a);
+
+t_color sca_mul_color(t_color a, double b);
+t_color mul_color(t_color a, t_color b);
+t_color add_color(t_color a, t_color b);
+int	argb_to_hex(t_color color);
+t_color get_color_vec(unsigned int red, unsigned int green, unsigned int blue);
+t_light_color mul_li_color(t_light_color a, double b);
+t_color mul_li_ob(t_light_color light, t_color obj);
+t_light_color add_li_color(t_light_color a, t_light_color b);
 #endif
