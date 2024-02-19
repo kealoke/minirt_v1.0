@@ -15,9 +15,6 @@ int main(int argc, char **argv)
   if(flag == false)
     return (EXIT_FAILURE);
 
-  // global_init(&world);
-  // printf("%p\n", world.amb);
-  // initStruct(&world);
   openAndRead(argv[1], &world);
 
   // ("%f\n", world.amb->light_ranprintfge);

@@ -12,6 +12,7 @@ t_objects	*objnew(void *content)
 	return (new_node);
 }
 
+//オブジェクトリストのサイズを取得する
 int	get_obj_size(t_objects *list)
 {
 	int	count;
@@ -27,6 +28,7 @@ int	get_obj_size(t_objects *list)
 	return (count);
 }
 
+//オブジェクトリストの最後のノードを取得する
 t_objects	*ob_lstlast(t_objects *lst)
 {
 	if (lst == NULL)
@@ -36,6 +38,7 @@ t_objects	*ob_lstlast(t_objects *lst)
 	return (lst);
 }
 
+//オブジェクトリストの末尾に新しくノードを追加する
 void	ob_lstadd_back(t_objects **lst, t_objects *new)
 {
 	t_objects	*lst_last;
