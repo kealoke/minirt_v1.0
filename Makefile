@@ -8,7 +8,8 @@ SRC_DIR = ./input ./gnl ./render
 SRCS = main.c \
 		get_next_line.c get_next_line_utils.c \
  		inputCheck.c inputParse.c inputRead.c inputSet.c inputSetObjs.c inputUtils.c \
-		draw.c mlx.c obj_list.c color_calc.c vec_calc.c
+		draw.c mlx.c obj_list.c color_calc_1.c color_calc_2.c vec_calc_1.c vec_calc_2.c \
+		plane.c sphere.c cylinder.c
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
 DEPS = $(OBJS:.o=.d)
 

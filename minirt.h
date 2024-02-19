@@ -76,14 +76,16 @@ t_vec	add_vec(t_vec a, t_vec b);
 t_vec	sub_vec(t_vec a, t_vec b);
 t_vec	mul_vec(t_vec a, double b);
 double	norm_vec(t_vec a);
+t_vec	vec_normalize(t_vec a);
 
 t_color sca_mul_color(t_color a, double b);
 t_color mul_color(t_color a, t_color b);
 t_color add_color(t_color a, t_color b);
 int	argb_to_hex(t_color color);
 t_color get_color_vec(unsigned int red, unsigned int green, unsigned int blue);
-t_light_color mul_li_color(t_light_color a, double b);
-t_color mul_ob_li(t_color obj,t_light_color light);
-t_light_color mul_li_ob(t_light_color light, t_color obj);
-t_light_color add_li_color(t_light_color a, t_light_color b);
+
+double	get_test_condition(double a, double b, double c);
+t_vec_info	pl_intersection(t_minirt *world, t_objects tmp_o_list, t_ray ray);
+t_vec_info	sp_intersection(t_minirt *world, t_objects tmp_o_list, t_ray ray);
+t_vec_info cy_intersecton(t_minirt *world, t_objects tmp_o_list, t_ray ray);
 #endif

@@ -55,7 +55,7 @@ typedef struct s_light_color
 typedef struct s_ambient
 {
 	double				light_intensity;
-	t_light_color				color;
+	t_color				color;
 }						t_ambient;
 
 // カメラ構造体
@@ -77,7 +77,7 @@ typedef struct s_light
 {
 	t_vec				pos_vec;
 	double				brightness;
-	t_light_color		color;
+	t_color				color;
 }						t_light;
 
 // 球体構造体
@@ -138,7 +138,7 @@ typedef struct s_objects
 }						t_objects;
 
 //描写するオブジェクトのベクトル情報
-// 1: double t -> 交点t
+// 1: double t -> 距離
 // 2: t_vec inter_pos -> 交点位置ベクトル
 // 2: t_vec obj_normal -> 法線ベクトル
 // 3: t_vec light_dir -> 入射ベクトル

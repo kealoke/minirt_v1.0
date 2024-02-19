@@ -14,18 +14,6 @@ double get_number(char *str, int *i, int *j){
 }
 
 
-//lightカラーを255から変換する
-t_light_color convert_color(t_color rgb){
-  t_light_color light_c;
-
-  light_c.r = ((double)rgb.r)/255.0;
-  light_c.g = ((double)rgb.g)/255.0;
-  light_c.b = ((double)rgb.b)/255.0;
-
-  printf("rgb %f %f %f\n", light_c.r,light_c.g, light_c.b);
-  return (light_c);
-}
-
 // 文字列をvec構造体に変換する関数
 // 1: char *str -> 変換したい文字列[x,y,z]
 // 2: t_vec *vec -> 変換後の値を入れる構造体
@@ -73,10 +61,10 @@ bool setRGBcolor(char *str, t_color *color)
 // tokenからt_ambient構造体に値を変換する関数
 // 1: char **token -> 変換したいtoken列
 // 2: t_minirt *world -> 変換した値を入れるminirt構造体
+// 3: t_read_flag *flag -> ambient情報が正しく読み込まれたかどうか
 void setAmbient(char **token, t_minirt *world, t_read_flag *flag)
 {
   bool rgb_flag;
-  t_color rgb_color;
 
   if(!token[1] || !token[2])
     printErrAndExit("Amiebt value is not enough\n");
@@ -84,16 +72,16 @@ void setAmbient(char **token, t_minirt *world, t_read_flag *flag)
   world->amb->light_intensity = ft_atod(token[1]);
   if (world->amb->light_intensity < 0.0 || 1.0 < world->amb->light_intensity)
     printErrAndExit(AMB_LIGHT_ERR);
-  rgb_flag = setRGBcolor(token[2], &(rgb_color));
-  if (flag == false)
+  rgb_flag = setRGBcolor(token[2], &(world->amb->color));
+  if (rgb_flag == false)
     printErrAndExit(AMB_COLOR_ERR);
-  world->amb->color = convert_color(rgb_color);
   flag->amb_f = true;
 }
 
 // tokenからカメラ構造体に変換する関数
 // 1: char **token -> 変換したいtoken列
 // 2: t_minirt *world -> 変換した値を入れるminirt構造体
+// 3: t_read_flag *flag -> カメラ情報が正しく読み取れたかどうか
 void setCamera(char **token, t_minirt *world, t_read_flag *flag)
 {
   if(!token[1] || !token[2] || !token[3])
@@ -110,12 +98,12 @@ void setCamera(char **token, t_minirt *world, t_read_flag *flag)
 }
 
 // tokenからLight構造体に変換する関数
-//  1: char **token -> 変換したいtoken列
-//  2: t_minirt *world -> 変換した値を入れるminirt構造体
+// 1: char **token -> 変換したいtoken列
+// 2: t_minirt *world -> 変換した値を入れるminirt構造体
+// 3: t_read_flag *flag -> 光源情報が正しく読み取れたかどうか
 void setLight(char **token, t_minirt *world, t_read_flag *flag)
 {
   int rgb_flag;
-  t_color rgb_color;
 
   if(!token[1] || !token[2] || !token[3])
     printErrAndExit("Light value is not enough\n");
@@ -124,9 +112,8 @@ void setLight(char **token, t_minirt *world, t_read_flag *flag)
   world->light->brightness = ft_atod(token[2]);
   if (world->light->brightness < 0.0 || 1.0 < world->light->brightness)
     printErrAndExit(LIGHT_BRIGHT_ERR);
-  rgb_flag = setRGBcolor(token[3], &(rgb_color));
-  if (flag == false)
+  rgb_flag = setRGBcolor(token[3], &(world->light->color));
+  if (rgb_flag == false)
     printErrAndExit(LIGHT_COLOR_ERR);
-  world->light->color = convert_color(rgb_color);
   flag->light_f = true;
 }

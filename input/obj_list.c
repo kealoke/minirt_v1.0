@@ -1,4 +1,4 @@
-#include "minirt.h"
+#include "../minirt.h"
 
 // t_objects のノードを新しく作成する
 // 1: void *content -> ノードのコンテント　

@@ -1,4 +1,4 @@
-#include "minirt.h"
+#include "../minirt.h"
 
 int	close_win(t_mlx *data)
 {
