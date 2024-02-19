@@ -17,32 +17,10 @@ t_vec	crossProduct(t_vec a, t_vec b)
 	return (res);
 }
 
-//ベクトルの足し算
-t_vec	add_vec(t_vec a, t_vec b)
-{
-	t_vec	res;
-
-	res.x = a.x + b.x;
-	res.y = a.y + b.y;
-	res.z = a.z + b.z;
-	return (res);
-}
-
-//ベクトルの引き算　a-b
-t_vec	sub_vec(t_vec a, t_vec b)
-{
-	t_vec	res;
-
-	res.x = a.x - b.x;
-	res.y = a.y - b.y;
-	res.z = a.z - b.z;
-	return (res);
-}
-
 //ベクトルのb倍
 t_vec	mul_vec(t_vec a, double b)
 {
-	t_vec res;
+	t_vec	res;
 
 	res.x = a.x * b;
 	res.y = a.y * b;
@@ -50,8 +28,21 @@ t_vec	mul_vec(t_vec a, double b)
 	return (res);
 }
 
-// ベクトルのノルム
+// ベクトルのノルムを取得する
 double	norm_vec(t_vec a)
 {
 	return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z));
+}
+
+// ベクトルの正規化
+t_vec	vec_normalize(t_vec a)
+{
+	t_vec	res;
+	double	mag;
+
+	mag = sqrt(InnerProduct(a, a));
+	res.x = a.x / mag;
+	res.y = a.y / mag;
+	res.z = a.z / mag;
+	return (res);
 }

@@ -3,6 +3,7 @@
 // tokenからt_sphere構造体に値を変換する関数
 // 1: char **token -> 変換したいtoken列
 // 2: t_minirt *world -> 変換した値を入れるminirt構造体
+// 3: t_read_flag *flag -> オブジェクト情報が正しく入力されたかどうか
 void setSphere(char **token, t_minirt *world, t_read_flag *flag)
 {
   t_sphere *sp;
@@ -23,6 +24,7 @@ void setSphere(char **token, t_minirt *world, t_read_flag *flag)
 // tokenからt_plane構造体に値を変換する関数
 // 1: char **token -> 変換したいtoken列
 // 2: t_minirt *world -> 変換した値を入れるminirt構造体
+// 3: t_read_flag *flag -> オブジェクト情報が正しく入力されたかどうか
 void setPlane(char **token, t_minirt *world, t_read_flag *flag)
 {
   bool rgb_flag;
@@ -48,6 +50,7 @@ void setPlane(char **token, t_minirt *world, t_read_flag *flag)
 // tokenからt_cylinder構造体に値を変換する関数
 // 1: char **token -> 変換したいtoken列
 // 2: t_minirt *world -> 変換した値を入れるminirt構造体
+// 3: t_read_flag *flag -> オブジェクト情報が正しく入力されたかどうか
 void setCylinder(char **token, t_minirt *world, t_read_flag *flag)
 {
   bool rgb_flag;

@@ -1,6 +1,9 @@
 #include "../minirt.h"
 
-//数値を範囲内に収める(min-max)
+// 数値を範囲内に収める(min-max)
+// 1: double value -> 修正したい値
+// 2: double min -> 範囲の最小値
+// 3: double max -> 範囲の最大値
 double clamp(double value, double min, double max) {
     if (value < min)
 		return min;
@@ -9,84 +12,10 @@ double clamp(double value, double min, double max) {
     return value;
 }
 
-// ベクトルの正規化
-t_vec	vec_normalize(t_vec a)
-{
-	t_vec res;
-	double mag = sqrt(InnerProduct(a,a));
-	res.x = a.x / mag;
-	res.y = a.y / mag;
-	res.z = a.z / mag;
-	return (res);
-}
-
-//平面オブジェクトとレイの交差判定をする
-t_vec_info	pl_intersection(t_minirt *world, t_objects tmp_o_list, t_ray ray)
-{
-	t_plane	*pl_obj;
-	t_vec	s_vec;
-	t_vec_info res;
-
-	pl_obj = tmp_o_list.content;
-	//視点（カメラ）と物体の距離
-	s_vec = sub_vec(ray.pos, pl_obj->pos_vec);
-	double denom = InnerProduct(ray.dir, pl_obj->normal_vec);
-	if (fabs(denom) > 1e-6) { // 1e-6は0に非常に近い値を表す閾値
-		res.t = (-(InnerProduct(s_vec, pl_obj->normal_vec) / denom));
-		if(res.t >= 0){
-			res.normal = vec_normalize(pl_obj->normal_vec);
-			res.color = pl_obj->color;
-			res.inter_pos = add_vec(ray.pos, mul_vec(ray.dir, res.t));
-			res.light_dir = vec_normalize(sub_vec(world->light->pos_vec, res.inter_pos));
-		}
-	}
-	else
-		res.t = -1;
-	return (res);
-}
-
-//判別式Dを計算し、tを求める
-double	get_sp_test_condition(t_vec vec, double r, t_vec dir_vec)
-{
-	double	a;
-	double	b;
-	double	c;
-	double	d;
-
-	a = InnerProduct(dir_vec, dir_vec);
-	b = InnerProduct(vec, dir_vec) * 2;
-	c = InnerProduct(vec, vec) - r * r;
-	d = b * b - 4 * a * c;
-	if(d >= 0){
-		return ((-b - sqrt(d)) / (2*a));
-	}
-	return (d);
-}
-
-//球体のオブジェクトとレイの交差判定をしてベクトル情報を返す
-t_vec_info	sp_intersection(t_minirt *world, t_objects tmp_o_list, t_ray ray)
-{
-	t_vec		pvc;
-	t_sphere	*sp_obj;
-	t_vec_info res;
-
-	sp_obj = tmp_o_list.content;
-	pvc = sub_vec(ray.pos, sp_obj->center_vec);
-	res.t = get_sp_test_condition(pvc, sp_obj->diameter, ray.dir);
-
-	if(res.t > 0){
-		//交点位置
-		res.inter_pos = add_vec(ray.pos, mul_vec(ray.dir, res.t));
-		// 法線ベクトル
-		res.normal = vec_normalize(sub_vec(res.inter_pos, sp_obj->center_vec));
-		// 入射ベクトル
-		res.light_dir = vec_normalize(sub_vec(world->light->pos_vec, res.inter_pos));
-		res.color = sp_obj->color;
-	}
-	return (res);
-}
-
-//オブジェクトにより計算方法を変更する
+//オブジェクトにより交点の計算方法を変更する
+// 1: t_minirt *world -> 全体の情報を持つ構造体
+// 2: t_objects tmp_o_list -> オブジェクトリストのノード
+// 3: t_ray ray -> 交差判定をするレイ
 t_vec_info calc_intersection(t_minirt *world,t_objects node, t_ray ray){
 
 	t_vec_info non;
@@ -97,14 +26,10 @@ t_vec_info calc_intersection(t_minirt *world,t_objects node, t_ray ray){
 			return (pl_intersection(world, node, ray));
 	else if (node.obj_type == t_sp)
 			return (sp_intersection(world, node, ray));
-		// 円柱
-		// else if(tmp_o_list->obj_type == t_cy){
-		// 	tmp_t = cy_intersecton();
-		// }
-		//tmp_t交点が，現在見つかっている最も近い交点よりも近いならその情報を記憶する
+	else if (node.obj_type == t_cy)
+		return (cy_intersecton(world, node, ray));
 	return non;
 }
-
 
 //レイとオブジェクトの交点を取得する
 //1: t_minirt *world ->ワールド変数
@@ -134,32 +59,18 @@ t_vec_info get_intersection(t_minirt *world, t_ray ray)
 }
 
 
-//環境光の放射輝度を反映したカラーを取得
+//環境光の放射輝度を取得
 double get_ambient(t_minirt *world){
-	t_light_color amb_color;
-	t_color res;
-	// double r;
-	// double g;
-	// double b;
+
 	double ambient_ref;
 	double ambient_k = 1;
 
 	ambient_ref = ambient_k * world->amb->light_intensity;
-
-	// r = ((double)world->amb->color.r)/255.0;
-	// g = ((double)world->amb->color.g)/255.0;
-	// b = ((double)world->amb->color.b)/255.0;
-	amb_color = mul_li_color(world->amb->color, ambient_ref);
-
-	res = sca_mul_color(get_color_vec(255,255,255), ambient_ref);
 	return ambient_ref;
-	// return res;
 }
 
-//拡散反射の放射輝度を反映したカラーを取得
+//拡散反射の放射輝度を取得
 double get_diffuse(t_minirt *world, t_vec_info closest_obj){
-	t_light_color dif_color;
-	t_color res;
 	double diffuse_ref;
 	double diffuse_k = 1;
 
@@ -169,25 +80,15 @@ double get_diffuse(t_minirt *world, t_vec_info closest_obj){
 
 	diffuse_ref = diffuse_k * nl * world->light->brightness;
 
-	//ライトカラーと拡散反射の輝度をかける
-	dif_color = mul_li_color(world->light->color, diffuse_ref);
-	// dif_color = sca_mul_color(world->light->color, diffuse_ref);
-
-	//物体のカラーとライトカラーをかける
-	// dif_color = mul_li_ob(dif_color, closest_obj.color);
-	res = sca_mul_color(get_color_vec(255,255,255), diffuse_ref);
-
-	// return res;
 	return diffuse_ref;
 }
 
+//鏡面反射の放射輝度を取得
 double get_supecular(t_minirt *world, t_vec_info closest_obj, t_vec dir_vec){
 
-	//鏡面反射の放射輝度
+
 	double supecular_ref;
 	double supecular_k = 1;
-	t_light_color sup_color;
-	t_color res;
 
 	double nl = InnerProduct(closest_obj.light_dir, closest_obj.normal);
 	if(nl > 0){
@@ -211,6 +112,8 @@ double get_supecular(t_minirt *world, t_vec_info closest_obj, t_vec dir_vec){
 }
 
 //物体にシャドウがかかるかチェックする
+// 1: t_minirt *world -> ワールド情報
+// 2: t_vec_info obj -> レイと交差するオブジェクト
 bool check_shadow(t_minirt *world, t_vec_info obj){
 	t_ray shadow_ray;
 
@@ -243,25 +146,63 @@ bool check_shadow(t_minirt *world, t_vec_info obj){
 	return false;
 }
 
+//カラーの値を調整して0-255に収める
+// 1: t_color color -> 調整したいカラー
+t_color adjust_color(t_color color){
+	t_color res;
 
+	//ライトのカラーもかけているので255で割って調整する
+	res.r = color.r/255;
+	res.g = color.g/255;
+	res.b = color.b/255;
 
+	// rgbを0-255の範囲に抑える
+	res.r = clamp(res.r, 0, 255);
+	res.g = clamp(res.g, 0, 255);
+	res.b = clamp(res.b, 0, 255);
+
+	return res;
+}
+
+//交点の色を求める(影,環境光、拡散反射、鏡面反射)
+int get_color(t_minirt *world, t_vec_info closest_obj, t_ray ray, double ra){
+	double rr, rd, rs;
+	int color;
+	t_color rgb_color;
+	t_color tmp_light;
+	tmp_light.r =255;
+	tmp_light.g =255;
+	tmp_light.b =255;
+
+	if (check_shadow(world, closest_obj) == true){
+		//影がかかる場合は環境光のみ反映させる
+		rr = ra;
+	}
+	else{
+		//環境光と鏡面反射を加える
+		if(closest_obj.color.g == 255)
+			// printf("cycycy\n");
+		rd =  get_diffuse(world, closest_obj);
+		rs = get_supecular(world, closest_obj, ray.dir);
+		rr = ra + rd + rs;
+	}
+	rgb_color = mul_color(sca_mul_color(closest_obj.color,rr),tmp_light);
+
+	rgb_color = adjust_color(rgb_color);
+	color = argb_to_hex(rgb_color);
+	return color;
+
+}
+
+// 描写する関数
 bool	draw(t_minirt *world, t_mlx *mlx)
 {
 	int  x;
 	int  y;
 	t_vec_info closest_obj;
 	int color = 0;
-	t_color amb_color;
-	t_color dif_color;
-	t_color sup_color;
-	t_color final_color;
-	t_color ref_color;
+	double ra;
 
-	double rr, ra, rd, rs;
-	t_color tmp_light;
-	tmp_light.r =255;
-	tmp_light.g =255;
-	tmp_light.b =255;
 
 
 	mlx->mlx = mlx_init();
@@ -285,11 +226,7 @@ bool	draw(t_minirt *world, t_mlx *mlx)
 	esy = vec_normalize(crossProduct(dsc, esx));
 
 	//環境光
-	// amb_color = get_ambient(world);
 	ra = get_ambient(world);
-	rr = 1;
-	// printf("amb_color %u, %u, %u\n",amb_color.r, amb_color.g, amb_color.b);
-	// printf("%f\n", ((double)255)/255.0 * 0.1 * world->amb->light_intensity);
 
 	x = 0;
 	while (x < WIDTH)
@@ -311,29 +248,7 @@ bool	draw(t_minirt *world, t_mlx *mlx)
 			//交点があれば
 			if (closest_obj.t > 0)
 			{
-				if (check_shadow(world, closest_obj) == true){
-					rr = ra;
-				}
-				else{
-					//環境光と鏡面反射を加える
-					printf("spspsp %u %u %u\n",closest_obj.color.r, closest_obj.color.g, closest_obj.color.b);
-					rd =  get_diffuse(world, closest_obj);
-					rs = get_supecular(world, closest_obj, ray.dir);
-					rr = ra + rd + rs;
-				}
-				final_color = mul_color(sca_mul_color(closest_obj.color,rr),tmp_light);
-
-				final_color.r = final_color.r/255;
-				final_color.g = final_color.g/255;
-				final_color.b = final_color.b/255;
-
-				// rgbを0-255の範囲に抑える
-				final_color.r = clamp(final_color.r, 0, 255);
-				final_color.g = clamp(final_color.g, 0, 255);
-				final_color.b = clamp(final_color.b, 0, 255);
-
-				color = argb_to_hex(final_color);
-
+				color = get_color(world, closest_obj, ray, ra);
 				my_mlx_pixel_put(mlx, x , y, color);
 			}
 			else
