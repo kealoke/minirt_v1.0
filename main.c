@@ -6,15 +6,15 @@ int main(int argc, char **argv)
   t_minirt world;
   t_mlx mlx;
 
-  flag = inputCheck(argc, argv);
+  flag = input_check(argc, argv);
   if(flag == false)
     return (EXIT_FAILURE);
 
-  openAndRead(argv[1], &world);
+  open_and_read(argv[1], &world);
 
-  set_mlx(&mlx);
+  set_mlx(&(world.mlx));
 
-  render(&world, &mlx);
+  render(&world);
 
   return (EXIT_SUCCESS);
 }

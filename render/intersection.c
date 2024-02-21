@@ -40,6 +40,7 @@ t_vec_info	get_intersection(t_minirt *world, t_ray ray)
 		}
 		tmp_o_list = tmp_o_list->next;
 	}
-	closest.t = closest.t != INFINITY ? closest.t : -1;
+	if (closest.t == INFINITY)
+		closest.t = -1;
 	return (closest);
 }

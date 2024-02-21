@@ -18,7 +18,7 @@ double	get_diffuse(t_minirt *world, t_vec_info closest_obj)
 	double	diffuse_ref;
 	double	nl;
 
-	nl = InnerProduct(closest_obj.light_dir, closest_obj.normal);
+	nl = inner_product(closest_obj.light_dir, closest_obj.normal);
 	if (nl < 0)
 		nl = 0;
 	diffuse_ref = DIFF_K * nl * world->light->brightness;
@@ -33,11 +33,11 @@ double	get_supecular(t_minirt *world, t_vec_info closest_obj, t_vec dir_vec)
 {
 	double	supecular_ref;
 	double	nl;
-	t_vec 	r;
+	t_vec	r;
 	t_vec	v;
 	double	vr;
 
-	nl = InnerProduct(closest_obj.light_dir, closest_obj.normal);
+	nl = inner_product(closest_obj.light_dir, closest_obj.normal);
 	if (nl > 0)
 	{
 		//正反射ベクトルを求める
@@ -45,7 +45,7 @@ double	get_supecular(t_minirt *world, t_vec_info closest_obj, t_vec dir_vec)
 					closest_obj.light_dir));
 		//視線ベクトルの逆ベクトル
 		v = vec_normalize(mul_vec(dir_vec, -1));
-		vr = InnerProduct(v, r);
+		vr = inner_product(v, r);
 		if (vr < 0)
 			vr = 0;
 		supecular_ref = SUP_K * world->light->brightness * pow(vr, 10.0);

@@ -14,7 +14,7 @@ t_vec	add_vec(t_vec a, t_vec b)
 //ベクトルの引き算　a-b
 t_vec	sub_vec(t_vec a, t_vec b)
 {
-	t_vec res;
+	t_vec	res;
 
 	res.x = a.x - b.x;
 	res.y = a.y - b.y;

@@ -8,7 +8,10 @@ int	argb_to_hex(t_color color)
 	unsigned int	a;
 
 	a = 0;
-	res_color = ((a & 0xFF) << 24) | ((color.r & 0xFF) << 16) | ((color.g & 0xFF) << 8) | (color.b & 0xFF);
+	res_color = ((a & 0xFF) << 24)
+		| ((color.r & 0xFF) << 16)
+		| ((color.g & 0xFF) << 8)
+		| (color.b & 0xFF);
 	return (res_color);
 }
 

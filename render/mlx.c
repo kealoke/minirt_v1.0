@@ -1,7 +1,8 @@
 #include "../minirt.h"
 
 //mlxのウィンドウ情報を設定する
-void set_mlx(t_mlx *mlx){
+void	set_mlx(t_mlx *mlx)
+{
 	mlx->mlx = mlx_init();
 	mlx->window = mlx_new_window(mlx->mlx, WIDTH, HEIGHT, "MiniRT");
 	mlx->img = mlx_new_image(mlx->mlx, WIDTH, HEIGHT);
@@ -30,7 +31,7 @@ int	key(int key_code, t_mlx *mlx)
 //イメージにピクセルカラーを設定する
 void	my_mlx_pixel_put(t_mlx *data, int x, int y, int color)
 {
-	char *dst;
+	char	*dst;
 
 	if (x > 0 && x < WIDTH && y > 0 && y < HEIGHT)
 	{

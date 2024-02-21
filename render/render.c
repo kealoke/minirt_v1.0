@@ -17,7 +17,7 @@ t_screen	get_screen_vec(t_minirt *world)
 	res.esx.z = -res.dsc.x / sqrt(res.dsc.z * res.dsc.z + res.dsc.x
 			* res.dsc.x);
 	res.esx = vec_normalize(res.esx);
-	res.esy = vec_normalize(crossProduct(res.dsc, res.esx));
+	res.esy = vec_normalize(cross_product(res.dsc, res.esx));
 	return (res);
 }
 
@@ -49,7 +49,7 @@ t_ray	get_ray(t_minirt *world, t_screen screen, int x, int y)
 // 3: int x -> スクリーンのx座標
 // 4: int y -> スクリーンのy座標
 // 5: t_mlx *mlx -> mlx情報
-void	draw(t_minirt *world, t_screen screen, int x, int y, t_mlx *mlx)
+void	draw(t_minirt *world, t_screen screen, int x, int y)
 {
 	t_ray		ray;
 	t_vec_info	closest_obj;
@@ -66,16 +66,16 @@ void	draw(t_minirt *world, t_screen screen, int x, int y, t_mlx *mlx)
 	if (closest_obj.t > 0)
 	{
 		color = get_color(world, closest_obj, ray, ra);
-		my_mlx_pixel_put(mlx, x, y, color);
+		my_mlx_pixel_put(&(world->mlx), x, y, color);
 	}
 	else
-		my_mlx_pixel_put(mlx, x, y, BACK_COLOR);
+		my_mlx_pixel_put(&(world->mlx), x, y, BACK_COLOR);
 }
 
 // ウィンドウに描写する
 // 1: t_minirt *world -> ワールド情報
 // 2: t_mlx *mlx -> mlx情報
-bool	render(t_minirt *world, t_mlx *mlx)
+bool	render(t_minirt *world)
 {
 	int			x;
 	int			y;
@@ -89,14 +89,15 @@ bool	render(t_minirt *world, t_mlx *mlx)
 		y = 0;
 		while (y < HEIGHT)
 		{
-			draw(world, screen, x, y, mlx);
+			draw(world, screen, x, y);
 			y++;
 		}
 		x++;
 	}
-	mlx_put_image_to_window(mlx->mlx, mlx->window, mlx->img, 0, 0);
-	mlx_hook(mlx->window, 17, 0, close_win, mlx);
-	mlx_hook(mlx->window, 2, 0, key, mlx);
-	mlx_loop(mlx->mlx);
+	mlx_put_image_to_window(world->mlx.mlx, world->mlx.window, world->mlx.img,
+		0, 0);
+	mlx_hook(world->mlx.window, 17, 0, close_win, &(world->mlx));
+	mlx_hook(world->mlx.window, 2, 0, key, &(world->mlx));
+	mlx_loop(world->mlx.mlx);
 	return (true);
 }
