@@ -35,18 +35,19 @@ double    get_cy_test_condition( double a, double b, double c, t_cylinder obj, b
 
         if (-harf_h < diff_t1 && diff_t1 < harf_h && -harf_h < diff_t2 && diff_t2 < harf_h){
             if (t1 > 0 && t1 < t2)
+            {
                 return t1;
-            if (t2 > 0)
+            }
+            if (t2 > 0) {
                 return t2;
+            }
         }
-        else if (-harf_h <= diff_t1 <= harf_h){
+        else if (-harf_h <= diff_t1 && diff_t1 <= harf_h){
             *flag = true;
-            printf("t1 %f\n",t1);
             return t1;
         }
-        else if (-harf_h <= diff_t2 <= harf_h){
+        else if (-harf_h <= diff_t2 && diff_t2 <= harf_h){
             *flag = true;
-            printf("t2 %f\n",t2);
             return t2;
         }
     }
@@ -73,6 +74,7 @@ t_vec_info cy_intersecton(t_minirt *world, t_objects tmp_o_list, t_ray ray) {
     double C;
     double r = cy_obj->diameter / 2;
     double harf_h = cy_obj->height / 2;
+    // printf("harf-h  %f", harf_h);
     t_vec_info res;
 
     A = ray.dir.x * ray.dir.x + ray.dir.z * ray.dir.z;
@@ -85,12 +87,13 @@ t_vec_info cy_intersecton(t_minirt *world, t_objects tmp_o_list, t_ray ray) {
         //交点位置
         res.inter_pos = add_vec(ray.pos, mul_vec(ray.dir, res.t));
         double diff = cy_obj->center_vec.y - res.inter_pos.y;
-
         // 交点位置から円柱の中心へのベクトルを計算
         t_vec inter_to_center = sub_vec(res.inter_pos, cy_obj->center_vec);
 
         // 円柱の軸に平行な成分を除外
         inter_to_center.y = 0;
+        inter_to_center.x *= 2;
+        inter_to_center.z *= 2;
 
         // 法線ベクトルを正規化
         res.normal = vec_normalize(inter_to_center);

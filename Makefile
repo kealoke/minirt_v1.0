@@ -1,7 +1,7 @@
 NAME = minirt
 CC = gcc
-CFLAGS =  -MMD -MP -g
-OPTION = -lmlx -framework OpenGL -framework Appkit
+CFLAGS = -MMD -MP -g
+OPTION = -L./mlx -lmlx -framework OpenGL -framework Appkit
 OBJ_DIR = ./objs
 SRC_DIR = ./input ./gnl ./render
 
@@ -21,7 +21,7 @@ all: $(NAME)
 
 $(OBJ_DIR)/%.o: %.c
 	mkdir -p $(@D)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -I ./mlx -c $< -o $@
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	mkdir -p $(@D)
