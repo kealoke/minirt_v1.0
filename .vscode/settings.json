@@ -1,6 +1,8 @@
 {
 	"files.associations": {
 		"__node_handle": "c",
-		"__functional_base": "c"
+		"__functional_base": "c",
+		"input.h": "c",
+		"libft.h": "c"
 	}
 }
