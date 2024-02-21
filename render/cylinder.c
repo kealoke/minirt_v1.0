@@ -1,24 +1,59 @@
 #include "../minirt.h"
 
-double    get_cy_test_condition( double a, double b, double c)
+double    get_cy_test_condition( double a, double b, double c, t_cylinder obj, bool *flag, t_ray ray)
 {
     double    d;
+    double harf_h;
+
 
     d = b * b - 4 * a * c;
-    if(d == 0){
+    harf_h = obj.height/2;
+    // if(d == 0){
+    //     return ((-b - sqrt(d)) / (2*a));
+    // }
+    // else if (d > 0){
+    //     double t1 = (-b - sqrt(d)) / (2*a);
+    //     double t2 = (-b + sqrt(d)) / (2*a);
+    //     // カメラに近い方の交点を選択
+    //     if (t1 > 0 && t1 < t2)
+    //         return t1;
+    //     if (t2 > 0)
+    //         return t2;
+    // }
+    *flag = false;
+    if (d == 0)
         return ((-b - sqrt(d)) / (2*a));
-    }
     else if (d > 0){
         double t1 = (-b - sqrt(d)) / (2*a);
         double t2 = (-b + sqrt(d)) / (2*a);
-        // カメラに近い方の交点を選択
-        if (t1 > 0 && t1 < t2)
+
+        t_vec inter_pos_1 = add_vec(ray.pos, mul_vec(ray.dir, t1));
+        t_vec inter_pos_2 = add_vec(ray.pos, mul_vec(ray.dir, t2));
+
+        double diff_t1 = obj.center_vec.y - inter_pos_1.y;
+        double diff_t2 = obj.center_vec.y - inter_pos_2.y;
+
+        if (-harf_h <= diff_t1 <= harf_h && -harf_h <= diff_t2 <= harf_h){
+            if (t1 > 0 && t1 < t2)
+                return t1;
+            if (t2 > 0)
+                return t2;
+        }
+        else if (-harf_h <= diff_t1 <= harf_h){
+            *flag = true;
+            printf("t1 %f\n",t1);
             return t1;
-        if (t2 > 0)
+        }
+        else if (-harf_h <= diff_t2 <= harf_h){
+            *flag = true;
+            printf("t2 %f\n",t2);
             return t2;
+        }
     }
-    return (d);
+    return (-1);
 }
+
+//交点位置をえきさんして高さの範囲内にあるか見る
 
 
 //円柱のオブジェクトとレイの交差判定をしてベクトル情報を返す
@@ -29,6 +64,7 @@ double    get_cy_test_condition( double a, double b, double c)
 t_vec_info cy_intersecton(t_minirt *world, t_objects tmp_o_list, t_ray ray) {
     t_vec        pvc;
     t_cylinder    *cy_obj;
+    bool flag;
 
     cy_obj = tmp_o_list.content;
     pvc = sub_vec(ray.pos, cy_obj->center_vec);
@@ -43,35 +79,28 @@ t_vec_info cy_intersecton(t_minirt *world, t_objects tmp_o_list, t_ray ray) {
     B = 2 * (pvc.x * ray.dir.x + pvc.z * ray.dir.z);
     C = pvc.x * pvc.x + pvc.z * pvc.z - r * r;
 
-    res.t = get_cy_test_condition(A, B, C);
+    res.t = get_cy_test_condition(A, B, C, *cy_obj, &flag, ray);
     // Dが０以上なら交点を持つ、0以上かつy軸距離が[−ℎ2,ℎ2]の範囲内である場合のみ交点を持つ
     if (res.t > 0) {
         //交点位置
         res.inter_pos = add_vec(ray.pos, mul_vec(ray.dir, res.t));
         double diff = cy_obj->center_vec.y - res.inter_pos.y;
-        // 交点あり
-        if (-harf_h < diff && diff < harf_h) {
-            // res.normal = sub_vec(res.inter_pos, cy_obj->center_vec);
-            // res.normal.x = 2;
-            // res.normal.y = 0;
-            // res.normal.z= 2;
-            // res.normal = vec_normalize(res.normal);
 
-			// 交点位置から円柱の中心へのベクトルを計算
-			t_vec inter_to_center = sub_vec(res.inter_pos, cy_obj->center_vec);
+        // 交点位置から円柱の中心へのベクトルを計算
+        t_vec inter_to_center = sub_vec(res.inter_pos, cy_obj->center_vec);
 
-			// 円柱の軸に平行な成分を除外
-			inter_to_center.y = 0;
+        // 円柱の軸に平行な成分を除外
+        inter_to_center.y = 0;
 
-			// 法線ベクトルを正規化
-			res.normal = vec_normalize(inter_to_center);
-
-            res.light_dir = vec_normalize(sub_vec(world->light->pos_vec, res.inter_pos));
-            res.color = cy_obj->color;
-
-        } else {
-            res.t = -1;
+        // 法線ベクトルを正規化
+        res.normal = vec_normalize(inter_to_center);
+        //flagがtrueなら円柱の内側なので逆ベクトルにする
+        if(flag == true){
+            res.normal = mul_vec(res.normal, -1);
         }
+
+        res.light_dir = vec_normalize(sub_vec(world->light->pos_vec, res.inter_pos));
+        res.color = cy_obj->color;
     }
     return (res);
 }

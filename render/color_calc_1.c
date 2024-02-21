@@ -1,6 +1,6 @@
 #include "../minirt.h"
 
-//カラー構造体のb倍
+//カラー構造体のb倍 a*b
 t_color	sca_mul_color(t_color a, double b)
 {
 	t_color	res;
@@ -11,7 +11,7 @@ t_color	sca_mul_color(t_color a, double b)
 	return (res);
 }
 
-//カラー構造体の割り算
+//カラー構造体の割り算 a/b
 t_color	div_color(t_color a, double b)
 {
 	t_color	res;
@@ -22,7 +22,7 @@ t_color	div_color(t_color a, double b)
 	return (res);
 }
 
-//カラー構造体同士の掛け算
+//カラー構造体同士の掛け算 a*b
 t_color	mul_color(t_color a, t_color b)
 {
 	t_color	res;
@@ -33,7 +33,7 @@ t_color	mul_color(t_color a, t_color b)
 	return (res);
 }
 
-//カラー構造体同士の足し算
+//カラー構造体同士の足し算 a+b
 t_color	add_color(t_color a, t_color b)
 {
 	t_color	res;

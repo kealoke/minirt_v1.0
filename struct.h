@@ -40,14 +40,6 @@ typedef struct s_color
 	unsigned int		b;
 }						t_color;
 
-//ライトのカラー情報 (/255.0 した値　[0-1])
-typedef struct s_light_color
-{
-	double r;
-	double g;
-	double b;
-
-}t_light_color;
 
 // 自然光構造体
 // 1: double light_intensity -> 自然光の光の強さ range[0.0, 1.0]
@@ -161,7 +153,15 @@ typedef struct s_ray
   t_vec dir;
 }t_ray;
 
-
+//スクリーンの基底ベクトル
+// 1: t_vec dsc -> カメラからスクリーンの中心へのベクトル
+// 2: t_vec esx ->
+// 3: t_vec esy ->
+typedef struct s_screen{
+	t_vec dsc;
+	t_vec esx;
+	t_vec esy;
+}t_screen;
 
 
 #endif

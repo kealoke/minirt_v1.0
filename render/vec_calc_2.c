@@ -1,6 +1,6 @@
 #include "../minirt.h"
 
-//ベクトルの足し算
+//ベクトルの足し算　a+b
 t_vec	add_vec(t_vec a, t_vec b)
 {
 	t_vec	res;

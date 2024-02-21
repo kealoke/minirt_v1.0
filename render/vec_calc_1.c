@@ -17,7 +17,7 @@ t_vec	crossProduct(t_vec a, t_vec b)
 	return (res);
 }
 
-//ベクトルのb倍
+//ベクトルのb倍 a*b
 t_vec	mul_vec(t_vec a, double b)
 {
 	t_vec	res;
