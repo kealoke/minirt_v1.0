@@ -33,7 +33,7 @@ double    get_cy_test_condition( double a, double b, double c, t_cylinder obj, b
         double diff_t1 = obj.center_vec.y - inter_pos_1.y;
         double diff_t2 = obj.center_vec.y - inter_pos_2.y;
 
-        if (-harf_h <= diff_t1 <= harf_h && -harf_h <= diff_t2 <= harf_h){
+        if (-harf_h < diff_t1 && diff_t1 < harf_h && -harf_h < diff_t2 && diff_t2 < harf_h){
             if (t1 > 0 && t1 < t2)
                 return t1;
             if (t2 > 0)
