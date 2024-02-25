@@ -6,9 +6,9 @@
 unsigned int	string_to_int(char **str)
 {
 	int	ans;
-
+	
 	ans = 0;
-	if (!*str)
+		if (!*str)
 		return (ans);
 	while (ft_isdigit(**str))
 	{
