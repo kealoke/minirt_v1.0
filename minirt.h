@@ -87,7 +87,6 @@ int				argb_to_hex(t_color color);
 
 bool			render(t_minirt *world);
 
-double			get_test_condition(double a, double b, double c);
 t_vec_info		pl_intersection(t_minirt *world, t_objects tmp_o_list,
 					t_ray ray);
 t_vec_info		sp_intersection(t_minirt *world, t_objects tmp_o_list,

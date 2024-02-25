@@ -83,21 +83,20 @@ t_vec_info cy_intersecton(t_minirt *world, t_objects tmp_o_list, t_ray ray) {
         double diff = cy_obj->center_vec.y - res.inter_pos.y;
 
         if (-harf_h < diff && diff < harf_h) {
-        // 交点位置から円柱の中心へのベクトルを計算
-        t_vec inter_to_center = sub_vec(res.inter_pos, cy_obj->center_vec);
+            //  交点位置から円柱の中心へのベクトルを計算
+            t_vec inter_to_center = sub_vec(res.inter_pos, cy_obj->center_vec);
 
-        // 円柱の軸に平行な成分を除外
-        inter_to_center.y = 0;
-        inter_to_center.x *= 2;
-        inter_to_center.z *= 2;
+            // 円柱の軸に平行な成分を除外
+            inter_to_center.y = 0;
+            inter_to_center.x *= 2;
+            inter_to_center.z *= 2;
 
-        // 法線ベクトルを正規化
-        res.normal = vec_normalize(inter_to_center);
-        //flagがtrueなら円柱の内側なので逆ベクトルにする
-        // if(flag == true){
-        //     res.normal = mul_vec(res.normal, -1);
-        // }
-
+            // 法線ベクトルを正規化
+            res.normal = vec_normalize(inter_to_center);
+            //flagがtrueなら円柱の内側なので逆ベクトルにする
+            if(flag == true){
+                res.normal = mul_vec(res.normal, -1);
+            }
         }
         res.light_dir = vec_normalize(sub_vec(world->light->pos_vec, res.inter_pos));
         res.color = cy_obj->color;
