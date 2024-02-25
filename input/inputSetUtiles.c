@@ -47,24 +47,17 @@ bool	set_rgb_color(char *str, t_color *color)
 
 	tmp = str;
 	color->r = string_to_int(&str);
-	if (255 < color->r || (*tmp != '0' && color->r == 0)) {
-		err_and_exit("color r");
+	if (255 < color->r || (*tmp != '0' && color->r == 0))
 		return (false);
-	}
 	str++;
 	tmp = str;
 	color->g = string_to_int(&str);
-	if (255 < color->g || (*tmp != '0' && color->g == 0)) {
-		err_and_exit("color g");
+	if (255 < color->g || (*tmp != '0' && color->g == 0))
 		return (false);
-	}
 	str++;
 	tmp = str;
 	color->b = string_to_int(&str);
-	if (255 < color->b || (*tmp != '0' && color->b == 0)) {
-		err_and_exit("color b");
+	if (255 < color->b || (*tmp != '0' && color->b == 0))
 		return (false);
-	}
-	// str++;
 	return (true);
 }

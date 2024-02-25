@@ -23,6 +23,8 @@
 
 #define CY_COLOR_ERR "Cylinder color is invalid value\nplese set each color in range of [0,255]\n"
 
+#define SP_COLOR_ERR "Sphere color is invalid value\nplese set each color in range of [0,255]\n"
+
 #define RGB_ERR "RGB is invalid value\n"
 
 #endif

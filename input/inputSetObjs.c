@@ -8,13 +8,16 @@ void	set_sphere(char **token, t_minirt *world, t_read_flag *flag)
 {
 	t_sphere	*sp;
 	t_objects	*obj;
+	bool		rgb_flag;
 
 	if (!token[1] || !token[2] || !token[3])
 		err_and_exit("Sphere value is not enough\n");
 	sp = my_malloc(sizeof(t_sphere));
 	set_vec(token[1], &(sp->center_vec));
 	sp->diameter = ft_atod(token[2]);
-	set_rgb_color(token[3], &(sp->color));
+	rgb_flag = set_rgb_color(token[3], &(sp->color));
+	if (rgb_flag == false)
+		err_and_exit(SP_COLOR_ERR);
 	obj = objnew(sp);
 	obj->obj_type = t_sp;
 	ob_lstadd_back(&(world->objs), obj);
@@ -39,7 +42,7 @@ void	set_plane(char **token, t_minirt *world, t_read_flag *flag)
 	if (check_vec_range(pl->normal_vec) == false)
 		err_and_exit(PLANE_VEC_ERR);
 	rgb_flag = set_rgb_color(token[3], &(pl->color));
-	if (flag == false)
+	if (rgb_flag == false)
 		err_and_exit(PLANE_COLOR_ERR);
 	obj = objnew(pl);
 	obj->obj_type = t_pl;
