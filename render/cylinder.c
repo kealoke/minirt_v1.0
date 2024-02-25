@@ -34,19 +34,13 @@ double    get_cy_test_condition( double a, double b, double c, t_cylinder obj, b
         double diff_t2 = obj.center_vec.y - inter_pos_2.y;
 
         if (-harf_h < diff_t1 && diff_t1 < harf_h && -harf_h < diff_t2 && diff_t2 < harf_h){
-            if (t1 > 0 && t1 < t2)
-            {
-                return t1;
-            }
-            if (t2 > 0) {
-                return t2;
-            }
+            return ((-b - sqrt(d)) / (2*a));
         }
-        else if (-harf_h <= diff_t1 && diff_t1 <= harf_h){
-            *flag = true;
+        else if (-harf_h < diff_t1 && diff_t1 < harf_h){
+            // *flag = true;
             return t1;
         }
-        else if (-harf_h <= diff_t2 && diff_t2 <= harf_h){
+        else if (-harf_h < diff_t2 && diff_t2 < harf_h){
             *flag = true;
             return t2;
         }
@@ -87,6 +81,8 @@ t_vec_info cy_intersecton(t_minirt *world, t_objects tmp_o_list, t_ray ray) {
         //交点位置
         res.inter_pos = add_vec(ray.pos, mul_vec(ray.dir, res.t));
         double diff = cy_obj->center_vec.y - res.inter_pos.y;
+
+        if (-harf_h < diff && diff < harf_h) {
         // 交点位置から円柱の中心へのベクトルを計算
         t_vec inter_to_center = sub_vec(res.inter_pos, cy_obj->center_vec);
 
@@ -102,6 +98,7 @@ t_vec_info cy_intersecton(t_minirt *world, t_objects tmp_o_list, t_ray ray) {
         //     res.normal = mul_vec(res.normal, -1);
         // }
 
+        }
         res.light_dir = vec_normalize(sub_vec(world->light->pos_vec, res.inter_pos));
         res.color = cy_obj->color;
     }
