@@ -107,6 +107,7 @@ typedef struct s_cylinder
 	double				diameter;
 	double				height;
 	t_color				color;
+	bool				inside;
 }						t_cylinder;
 
 // どのオブジェクトか判別する
