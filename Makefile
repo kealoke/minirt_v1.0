@@ -29,7 +29,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 $(NAME): $(OBJS)
 	$(MAKE) -C ./libft
-	$(CC) $(CFLAGS) $(OPTION) $(LIBFT) $^ -o $@ -fsanitize=address
+	$(CC) $(CFLAGS) $(OPTION) $(LIBFT) $^ -o $@
 
 clean:
 	$(RM) -rf $(OBJ_DIR)

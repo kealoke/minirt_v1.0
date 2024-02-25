@@ -3,7 +3,7 @@
 // 文字列の先頭か数字までをintの数値にして返す
 //  char *str=255,0,0 -> return (int)255
 // 1:char **str -> 変換したい数字を先頭に含む文字列
-int	string_to_int(char **str)
+unsigned int	string_to_int(char **str)
 {
 	int	ans;
 

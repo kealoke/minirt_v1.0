@@ -1,5 +1,15 @@
 #include "../minirt.h"
 
+// splitで確保したtokenをフリーする
+void free_token(char **token){
+	int i =0;
+	while(token[i] != NULL){
+		free(token[i]);
+		i++;
+	}
+	free(token);
+}
+
 // lineをsplitして構造体に入力する関数
 // 1: char *line -> ファイルから読み込んだライン
 // 2: t_minirt *world -> 値を入力する構造体
@@ -22,4 +32,5 @@ void	parse_line(char *line, t_minirt *world, t_read_flag *flag)
 		set_plane(token, world, flag);
 	else if (is_match(token[0], "cy"))
 		set_cylinder(token, world, flag);
+	free_token(token);
 }

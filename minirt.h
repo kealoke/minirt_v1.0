@@ -45,11 +45,12 @@ void			err_and_exit(char *msg);
 int       input_error(char *msg);
 
 double		ft_atod(char *str);
-int				string_to_int(char **str);
+unsigned int				string_to_int(char **str);
 bool			is_match(char *s1, char *s2);
 
 bool			input_check(int argc, char **argv);
 bool			check_vec_range(t_vec vec);
+bool check_color_range(unsigned color, char *str);
 void			parse_line(char *line, t_minirt *world, t_read_flag *flag);
 void			open_and_read(char *file, t_minirt *world);
 void			set_vec(char *str, t_vec *vec);

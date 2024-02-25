@@ -42,6 +42,7 @@ void	open_and_read(char *file, t_minirt *world)
 		if (!file_line)
 			break ;
 		parse_line(file_line, world, &flag);
+		free(file_line);
 	}
 	ckeck_flag = file_identifer_check(flag);
 	if (!ckeck_flag)
