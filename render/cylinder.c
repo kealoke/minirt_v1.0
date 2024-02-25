@@ -98,9 +98,9 @@ t_vec_info cy_intersecton(t_minirt *world, t_objects tmp_o_list, t_ray ray) {
         // 法線ベクトルを正規化
         res.normal = vec_normalize(inter_to_center);
         //flagがtrueなら円柱の内側なので逆ベクトルにする
-        if(flag == true){
-            res.normal = mul_vec(res.normal, -1);
-        }
+        // if(flag == true){
+        //     res.normal = mul_vec(res.normal, -1);
+        // }
 
         res.light_dir = vec_normalize(sub_vec(world->light->pos_vec, res.inter_pos));
         res.color = cy_obj->color;

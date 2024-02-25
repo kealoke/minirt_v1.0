@@ -9,7 +9,7 @@ SRCS = main.c \
 		get_next_line.c get_next_line_utils.c \
  		inputCheck.c inputParse.c inputRead.c inputSet.c inputSetUtiles.c inputSetObjs.c inputUtils.c \
 		render.c mlx.c obj_list.c colorCalc_1.c colorCalc_2.c vecCalc_1.c vecCalc_2.c \
-		plane.c sphere.c cylinder.c intersection.c reflection.c
+		plane.c sphere.c cylinder.c intersection.c reflection.c shadow.c
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
 DEPS = $(OBJS:.o=.d)
 
