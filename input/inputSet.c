@@ -10,7 +10,7 @@ void	set_ambient(char **token, t_minirt *world, t_read_flag *flag)
 
 	if (!token[1] || !token[2])
 		err_and_exit("Amiebt value is not enough\n");
-	if(world->amb != NULL)
+	if (world->amb != NULL)
 		err_and_exit("Ambient can only be declared once\n");
 	world->amb = my_malloc(sizeof(t_ambient));
 	world->amb->light_intensity = ft_atod(token[1]);
@@ -30,7 +30,7 @@ void	set_camera(char **token, t_minirt *world, t_read_flag *flag)
 {
 	if (!token[1] || !token[2] || !token[3])
 		err_and_exit("Camera value is not enough\n");
-	if(world->cam != NULL)
+	if (world->cam != NULL)
 		err_and_exit("Camera can only be declared once\n");
 	world->cam = my_malloc(sizeof(t_camera));
 	set_vec(token[1], &(world->cam->pos_vec));
@@ -53,7 +53,7 @@ void	set_light(char **token, t_minirt *world, t_read_flag *flag)
 
 	if (!token[1] || !token[2] || !token[3])
 		err_and_exit("Light value is not enough\n");
-	if(world->light != NULL)
+	if (world->light != NULL)
 		err_and_exit("Light can only be declared once");
 	world->light = my_malloc(sizeof(t_light));
 	set_vec(token[1], &(world->light->pos_vec));

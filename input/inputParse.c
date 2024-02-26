@@ -1,9 +1,13 @@
 #include "../minirt.h"
 
 // splitで確保したtokenをフリーする
-void free_token(char **token){
-	int i =0;
-	while(token[i] != NULL){
+void	free_token(char **token)
+{
+	int	i;
+
+	i = 0;
+	while (token[i] != NULL)
+	{
 		free(token[i]);
 		i++;
 	}

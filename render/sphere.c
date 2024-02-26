@@ -10,7 +10,7 @@ double	get_test_condition(t_vec pvc, t_ray ray, t_sphere *sp_obj)
 
 	a = inner_product(ray.dir, ray.dir);
 	b = inner_product(pvc, ray.dir) * 2;
-	c = inner_product(pvc, pvc) - sp_obj->diameter/2 * sp_obj->diameter/2;
+	c = inner_product(pvc, pvc) - sp_obj->diameter / 2 * sp_obj->diameter / 2;
 	d = b * b - 4 * a * c;
 	if (d >= 0)
 	{
@@ -38,7 +38,7 @@ t_vec_info	sp_intersection(t_minirt *world, t_objects tmp_o_list, t_ray ray)
 		res.inter_pos = add_vec(ray.pos, mul_vec(ray.dir, res.t));
 		res.normal = vec_normalize(sub_vec(res.inter_pos, sp_obj->center_vec));
 		res.light_dir = vec_normalize(sub_vec(world->light->pos_vec,
-												res.inter_pos));
+					res.inter_pos));
 		res.color = sp_obj->color;
 	}
 	return (res);

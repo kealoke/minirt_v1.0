@@ -43,7 +43,7 @@ void	set_vec(char *str, t_vec *vec)
 // 2: t_color *color -> 変換後の値を格納するt_color構造体
 bool	set_rgb_color(char *str, t_color *color)
 {
-	char *tmp;
+	char	*tmp;
 
 	tmp = str;
 	color->r = string_to_int(&str);

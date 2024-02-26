@@ -37,11 +37,3 @@ bool	check_vec_range(t_vec vec)
 		return (false);
 	return (true);
 }
-
-bool check_color_range(unsigned int color, char *str){
-	if (255 < color)
-		return false;
-	if(!is_match(str,"0") && color == 0)
-		return false;
-	return true;
-}

@@ -16,9 +16,9 @@ double	get_cy_intersection(t_ray ray, t_cylinder obj, bool first)
 	if (d == 0)
 		return ((-b - sqrt(d)) / (2 * a));
 	else if (d > 0 && first)
-		return (-b - sqrt(d)) / (2 * a);
+		return ((-b - sqrt(d)) / (2 * a));
 	else if (d > 0)
-		return (-b + sqrt(d)) / (2 * a);
+		return ((-b + sqrt(d)) / (2 * a));
 	return (d);
 }
 
@@ -33,7 +33,7 @@ double	get_cy_test_condition(t_cylinder *obj, t_ray ray, double harf_h)
 	t2 = get_cy_intersection(ray, *obj, false);
 	diff_t1 = obj->center_vec.y - add_vec(ray.pos, mul_vec(ray.dir, t1)).y;
 	diff_t2 = obj->center_vec.y - add_vec(ray.pos, mul_vec(ray.dir, t2)).y;
-	if (-harf_h < diff_t1 && diff_t1 < harf_h && -harf_h < diff_t2
+	if ((-1 * harf_h) < diff_t1 && diff_t1 < harf_h && (-1 * harf_h) < diff_t2
 		&& diff_t2 < harf_h)
 	{
 		if (diff_t1 < diff_t2)
