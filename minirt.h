@@ -1,6 +1,8 @@
 #ifndef MINIRT_H
 # define MINIRT_H
 
+# include "errmsg.h"
+# include "struct.h"
 # include <fcntl.h>
 # include <float.h>
 # include <math.h>
@@ -10,13 +12,11 @@
 # include <sys/types.h>
 # include "./gnl/get_next_line.h"
 # include "./libft/libft.h"
-# include "errmsg.h"
-# include "struct.h"
 
 # define WIDTH 800
 # define HEIGHT 800
 
-# define EPSILON 1.0 / 128.0
+# define EPSILON 1.0/128.0
 
 # define BACK_COLOR 0x00000000
 
@@ -33,7 +33,7 @@
 //5: t_objects objs -> 描写する物体情報
 typedef struct s_minirt
 {
-  t_mlx     mlx;
+	t_mlx		mlx;
 	t_ambient	*amb;
 	t_camera	*cam;
 	t_light		*light;
@@ -42,15 +42,15 @@ typedef struct s_minirt
 }				t_minirt;
 
 void			err_and_exit(char *msg);
-int       input_error(char *msg);
+int				input_error(char *msg);
 
-double		ft_atod(char *str);
-unsigned int				string_to_int(char **str);
+double			ft_atod(char *str);
+unsigned int	string_to_int(char **str);
 bool			is_match(char *s1, char *s2);
 
 bool			input_check(int argc, char **argv);
 bool			check_vec_range(t_vec vec);
-bool check_color_range(unsigned color, char *str);
+bool			check_color_range(unsigned color, char *str);
 void			parse_line(char *line, t_minirt *world, t_read_flag *flag);
 void			open_and_read(char *file, t_minirt *world);
 void			set_vec(char *str, t_vec *vec);
@@ -62,7 +62,7 @@ void			set_sphere(char **token, t_minirt *world, t_read_flag *flag);
 void			set_plane(char **token, t_minirt *world, t_read_flag *flag);
 void			set_cylinder(char **token, t_minirt *world, t_read_flag *flag);
 void			*my_malloc(size_t size);
-double	get_number(char *str, int *i, int *j);
+double			get_number(char *str, int *i, int *j);
 
 t_objects		*objnew(void *content);
 int				get_obj_size(t_objects *list);
@@ -97,7 +97,8 @@ t_vec_info		cy_intersecton(t_minirt *world, t_objects tmp_o_list,
 t_vec_info		calc_intersection(t_minirt *world, t_objects node, t_ray ray);
 t_vec_info		get_intersection(t_minirt *world, t_ray ray);
 
-int	get_color(t_minirt *world, t_vec_info closest_obj, t_ray ray, double ra);
+int				get_color(t_minirt *world, t_vec_info closest_obj, t_ray ray,
+					double ra);
 double			get_ambient(t_minirt *world);
 double			get_diffuse(t_minirt *world, t_vec_info closest_obj);
 double			get_supecular(t_minirt *world, t_vec_info closest_obj,

@@ -2,6 +2,25 @@
 # define STRUCT_H
 
 # include "./libft/libft.h"
+# include <stdbool.h>
+
+
+// どのオブジェクトか判別する
+typedef enum e_type_name
+{
+	t_sp,
+	t_pl,
+	t_cy
+
+}						t_type_name;
+
+// 円柱との交点が内側か外側かのフラグ
+typedef enum e_in_out
+{
+	in,
+	out,
+	non
+}						t_in_out;
 
 //rtファイルの設定がされているかのフラグ
 typedef struct s_read_flags
@@ -107,17 +126,8 @@ typedef struct s_cylinder
 	double				diameter;
 	double				height;
 	t_color				color;
-	bool				inside;
+	t_in_out			in_or_out;
 }						t_cylinder;
-
-// どのオブジェクトか判別する
-typedef enum e_type_name
-{
-	t_sp,
-	t_pl,
-	t_cy
-
-}						t_type_name;
 
 // 物体構造体
 // 1: void *content -> オブジェクト構造体のポインタ(t_sphere or t_plane or t_cylinder)
@@ -154,6 +164,7 @@ typedef struct s_ray
   t_vec dir;
 }t_ray;
 
+
 //スクリーンの基底ベクトル
 // 1: t_vec dsc -> カメラからスクリーンの中心へのベクトル
 // 2: t_vec esx ->
@@ -163,6 +174,22 @@ typedef struct s_screen{
 	t_vec esx;
 	t_vec esy;
 }t_screen;
+
+
+//描写するオブジェクトのベクトル情報
+// 1: double t -> 距離
+// 2: t_vec inter_pos -> 交点位置ベクトル
+// 2: t_vec obj_normal -> 法線ベクトル
+// 3: t_vec light_dir -> 入射ベクトル
+// 4: t_color obj_color ->描写するオブジェクトのカラー
+typedef struct s__cy_vec_info
+{
+	t_in_out			flag;
+	double				t;
+  	t_vec       		inter_pos;
+	t_vec				to_center;
+	double				p_c_n;
+}						t_cy_vec_info;
 
 
 #endif
