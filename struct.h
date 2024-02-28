@@ -4,7 +4,6 @@
 # include "./libft/libft.h"
 # include <stdbool.h>
 
-
 // どのオブジェクトか判別する
 typedef enum e_type_name
 {
@@ -176,20 +175,19 @@ typedef struct s_screen{
 }t_screen;
 
 
-//描写するオブジェクトのベクトル情報
-// 1: double t -> 距離
+// 円柱の法線ベクトルを描写&計算するために必要な情報セット
+// 1: t_in_out flag; -> 交点がin/out/nonのどれか
+// 2: double t -> 距離
 // 2: t_vec inter_pos -> 交点位置ベクトル
-// 2: t_vec obj_normal -> 法線ベクトル
-// 3: t_vec light_dir -> 入射ベクトル
-// 4: t_color obj_color ->描写するオブジェクトのカラー
-typedef struct s__cy_vec_info
+// 3: t_vec to_center -> in/outの交点位置から円柱centerへのベクトル
+// 4: double p_c_n ->to_centert＊円柱軸ベクトル
+typedef struct s_cy_info
 {
-	t_in_out			flag;
-	double				t;
-  	t_vec       		inter_pos;
-	t_vec				to_center;
-	double				p_c_n;
-}						t_cy_vec_info;
-
+	t_in_out	flag;
+	double		t;
+  	t_vec       inter_pos;
+	t_vec		to_center;
+	double		p_c_n;
+}						t_cy_info;
 
 #endif

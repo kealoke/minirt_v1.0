@@ -14,10 +14,10 @@ double	get_cy_intersection(t_ray ray, t_cylinder obj, bool first)
 	// c = pvc.x * pvc.x + pvc.z * pvc.z - obj.height / 2 * obj.height / 2;
 	a = norm_vec(cross_product(ray.dir, obj.axis_vec));
 	a *= a;
-	b = 2 * inner_product(cross_product(ray.dir, obj.axis_vec),
-			cross_product(pvc, obj.axis_vec));
+	b = 2 * inner_product(cross_product(ray.dir, obj.axis_vec), cross_product(pvc, obj.axis_vec));
 	c = norm_vec(cross_product(pvc, obj.axis_vec));
-	c = c * c - obj.diameter / 2 * obj.diameter / 2;
+	c = c * c - obj.diameter/2 * obj.diameter/2;
+
 	d = b * b - 4 * a * c;
 	if (d == 0)
 		return ((-b - sqrt(d)) / (2 * a));
@@ -28,29 +28,24 @@ double	get_cy_intersection(t_ray ray, t_cylinder obj, bool first)
 	return (d);
 }
 
-void	get_cy_test_condition(t_cylinder *obj, t_ray ray, double h,
-		t_cy_vec_info *res)
+void	get_cy_test_condition(t_cylinder *obj, t_ray ray, double h, t_cy_info *res)
 {
 	double	t1;
 	double	t2;
 	double	diff_out;
 	double	diff_in;
-	double	d;
-	t_vec	p_out;
-	t_vec	p_in;
-	t_vec	center_to_out;
-	t_vec	center_to_in;
 
 	t1 = get_cy_intersection(ray, *obj, true);
 	t2 = get_cy_intersection(ray, *obj, false);
 	// diff_t1 = obj->center_vec.y - add_vec(ray.pos, mul_vec(ray.dir, t1)).y;
 	// diff_t2 = obj->center_vec.y - add_vec(ray.pos, mul_vec(ray.dir, t2)).y;
-	p_out = add_vec(ray.pos, mul_vec(ray.dir, t1));
-	p_in = add_vec(ray.pos, mul_vec(ray.dir, t2));
+
+	t_vec p_out = add_vec(ray.pos, mul_vec(ray.dir, t1));
+	t_vec p_in = add_vec(ray.pos, mul_vec(ray.dir, t2));
 
 	//レイと無限円柱の交点
-	center_to_out = sub_vec(p_out, obj->center_vec);
-	center_to_in = sub_vec(p_in, obj->center_vec);
+	t_vec center_to_out = sub_vec(p_out, obj->center_vec);
+	t_vec center_to_in = sub_vec(p_in, obj->center_vec);
 
 	diff_out = inner_product(center_to_out, obj->axis_vec);
 	diff_in = inner_product(center_to_in, obj->axis_vec);
@@ -97,7 +92,7 @@ t_vec_info	cy_intersecton(t_minirt *world, t_objects tmp_o_list, t_ray ray)
 {
 	t_cylinder		*cy_obj;
 	t_vec_info		res;
-	t_cy_vec_info	inter;
+	t_cy_info	inter;
 	t_vec			inter_to_center;
 
 	cy_obj = tmp_o_list.content;
