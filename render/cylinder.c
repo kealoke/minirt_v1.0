@@ -63,7 +63,7 @@ void	get_cy_test_condition(t_cylinder *obj, t_ray ray, double h, t_cy_info *res)
 	// 	obj->inside = true;
 	// 	return (t2);
 	// }
-	if (0 <= diff_out && diff_out <= h)
+	if (-h/2 <= diff_out && diff_out <= h/2 && t1 > 0)
 	{
 		res->flag = out;
 		res->t = t1;
@@ -71,7 +71,7 @@ void	get_cy_test_condition(t_cylinder *obj, t_ray ray, double h, t_cy_info *res)
 		res->to_center = center_to_out;
 		res->p_c_n = diff_out;
 	}
-	else if (0 <= diff_in && diff_in <= h)
+	else if (-h/2 <= diff_in && diff_in <= h/2 && t2 > 0)
 	{
 		res->flag = in;
 		res->t = t2;
