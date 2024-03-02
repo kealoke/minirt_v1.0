@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   reflection.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/02 18:33:04 by yushimom          #+#    #+#             */
+/*   Updated: 2024/03/02 18:35:16 by yushimom         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minirt.h"
 
 //環境光の放射輝度を取得する関数
@@ -40,10 +52,8 @@ double	get_supecular(t_minirt *world, t_vec_info closest_obj, t_vec dir_vec)
 	nl = inner_vec(closest_obj.light_dir, closest_obj.normal);
 	if (nl > 0)
 	{
-		//正反射ベクトルを求める
 		r = vec_normalize(sub_vec(mul_vec(mul_vec(closest_obj.normal, nl), 2),
 					closest_obj.light_dir));
-		//視線ベクトルの逆ベクトル
 		v = vec_normalize(mul_vec(dir_vec, -1));
 		vr = inner_vec(v, r);
 		if (vr < 0)

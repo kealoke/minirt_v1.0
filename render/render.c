@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/02 18:33:07 by yushimom          #+#    #+#             */
+/*   Updated: 2024/03/02 18:35:08 by yushimom         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minirt.h"
 
 //スクリーンの基底ベクトルを取得する
@@ -7,11 +19,8 @@ t_screen	get_screen_vec(t_minirt *world)
 	double		d;
 	t_screen	res;
 
-	// カメラからスクリーンまでの距離
 	d = WIDTH / 2 / tan(world->cam->fov / 2 / 180 * M_PI);
-	// カメラからスクリーンの中心へのベクトル
 	res.dsc = mul_vec(world->cam->ori_vec, d);
-	// スクリーンの基底ベクトル
 	res.esx.x = res.dsc.z / sqrt(res.dsc.z * res.dsc.z + res.dsc.x * res.dsc.x);
 	res.esx.y = 0;
 	res.esx.z = -res.dsc.x / sqrt(res.dsc.z * res.dsc.z + res.dsc.x
@@ -56,13 +65,9 @@ void	draw(t_minirt *world, t_screen screen, int x, int y)
 	double		ra;
 	int			color;
 
-	//環境光
 	ra = get_ambient(world);
-	// レイのベクトル情報を取得する
 	ray = get_ray(world, screen, x, y);
-	// 視点とぶつかるオブジェクトを計算する
 	closest_obj = get_intersection(world, ray);
-	//交点があれば色を取得する
 	if (closest_obj.t > 0)
 	{
 		color = get_color(world, closest_obj, ray, ra);
@@ -81,7 +86,6 @@ bool	render(t_minirt *world)
 	int			y;
 	t_screen	screen;
 
-	//スクリーン基底ベクトルを取得
 	screen = get_screen_vec(world);
 	x = 0;
 	while (x < WIDTH)

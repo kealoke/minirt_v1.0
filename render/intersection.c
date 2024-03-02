@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   intersection.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/02 18:32:45 by yushimom          #+#    #+#             */
+/*   Updated: 2024/03/02 18:35:39 by yushimom         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minirt.h"
 
 //オブジェクトにより交点の計算方法を変更する
@@ -27,10 +39,8 @@ t_vec_info	get_intersection(t_minirt *world, t_ray ray)
 	t_vec_info	closest;
 	t_vec_info	tmp;
 
-	// 最も近い交点までの距離
 	closest.t = INFINITY;
 	tmp_o_list = world->objs;
-	//全てのオブジェクトに対して計算する
 	while (tmp_o_list != NULL)
 	{
 		tmp = calc_intersection(world, *tmp_o_list, ray);

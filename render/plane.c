@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   plane.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/02 18:32:59 by yushimom          #+#    #+#             */
+/*   Updated: 2024/03/02 18:35:25 by yushimom         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minirt.h"
 
 //平面オブジェクトとレイの交差判定をする
@@ -13,10 +25,8 @@ t_vec_info	pl_intersection(t_minirt *world, t_objects tmp_o_list, t_ray ray)
 	double		denom;
 
 	pl_obj = tmp_o_list.content;
-	//視点（カメラ）と物体の距離
 	s_vec = sub_vec(ray.pos, pl_obj->pos_vec);
 	denom = inner_vec(ray.dir, pl_obj->normal_vec);
-	// 1e-6は0に非常に近い値を表す閾値
 	if (fabs(denom) > 1e-6)
 	{
 		res.t = (-(inner_vec(s_vec, pl_obj->normal_vec) / denom));

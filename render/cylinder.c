@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cylinder.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/02 18:32:38 by yushimom          #+#    #+#             */
+/*   Updated: 2024/03/02 18:36:03 by yushimom         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minirt.h"
 
 // 円柱の判別式を計算する関数
@@ -36,9 +48,7 @@ t_cy_info	get_cy_intersection_info(t_ray ray, t_cylinder *obj, bool first)
 	t_cy_info	res;
 
 	res.t = get_cy_intersection(ray, *obj, first);
-	//交点位置
 	res.inter_pos = add_vec(ray.pos, mul_vec(ray.dir, res.t));
-	// レイと無限円柱の交点
 	res.to_center = sub_vec(res.inter_pos, obj->center_vec);
 	res.p_c_n = inner_vec(res.to_center, obj->axis_vec);
 	if (first)
@@ -96,23 +106,18 @@ t_vec_info	cy_intersecton(t_minirt *world, t_objects tmp_o_list, t_ray ray)
 
 	cy_obj = tmp_o_list.content;
 	get_cy_test_condition(cy_obj, ray, cy_obj->height / 2, &inter);
-	// Dが０以上なら交点を持つ、0以上かつy軸距離が[−ℎ2,ℎ2]の範囲内である場合のみ交点を持つ
 	if (inter.flag == non)
 		res.t = -1.0;
 	else
 	{
 		res.t = inter.t;
-		//交点位置
 		res.inter_pos = inter.inter_pos;
-		//交点から円柱の中心
 		if (inter.flag == in)
 			inter_to_center = sub_vec(mul_vec(cy_obj->axis_vec, inter.p_c_n),
 					inter.to_center);
 		else if (inter.flag == out)
 			inter_to_center = sub_vec(inter.to_center, mul_vec(cy_obj->axis_vec,
 						inter.p_c_n));
-		// 法線ベクトルを求める
-		// 法線ベクトルを正規化
 		res.normal = vec_normalize(inter_to_center);
 		res.light_dir = vec_normalize(sub_vec(world->light->pos_vec,
 					res.inter_pos));
