@@ -39,6 +39,14 @@ t_cy_info get_cy_intersection_info(t_ray ray, t_cylinder *obj, bool first) {
 	return res;
 }
 
+void assignment(t_cy_info *inter, t_cy_info intersection) {
+	inter->flag = intersection.flag;
+	inter->t = intersection.t;
+	inter->inter_pos = intersection.inter_pos;
+	inter->to_center = intersection.to_center;
+	inter->p_c_n = intersection.p_c_n;
+} 
+
 void	get_cy_test_condition(t_cylinder *obj, t_ray ray, double h, t_cy_info *inter)
 {
 	t_cy_info inner_intersection;
@@ -47,21 +55,9 @@ void	get_cy_test_condition(t_cylinder *obj, t_ray ray, double h, t_cy_info *inte
 	outer_intersection = get_cy_intersection_info(ray, obj, true);
 	inner_intersection = get_cy_intersection_info(ray, obj, false);
 	if (-h/2 <= outer_intersection.p_c_n && outer_intersection.p_c_n <= h/2 && outer_intersection.t > 0)
-	{
-		inter->flag = outer_intersection.flag;
-		inter->t = outer_intersection.t;
-		inter->inter_pos = outer_intersection.inter_pos;
-		inter->to_center = outer_intersection.to_center;
-		inter->p_c_n = outer_intersection.p_c_n;
-	}
+		assignment(inter, outer_intersection);
 	else if (-h/2 <= inner_intersection.p_c_n && inner_intersection.p_c_n <= h/2 && inner_intersection.t > 0)
-	{
-		inter->flag = inner_intersection.flag;
-		inter->t = inner_intersection.t;
-		inter->inter_pos = inner_intersection.inter_pos;
-		inter->to_center = inner_intersection.to_center;
-		inter->p_c_n = inner_intersection.p_c_n;
-	}
+		assignment(inter, inner_intersection);
 	else
 		inter->flag = non;
 }
