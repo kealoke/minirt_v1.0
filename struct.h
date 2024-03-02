@@ -10,7 +10,6 @@ typedef enum e_type_name
 	t_sp,
 	t_pl,
 	t_cy
-
 }						t_type_name;
 
 // 円柱との交点が内側か外側かのフラグ
@@ -57,7 +56,6 @@ typedef struct s_color
 	unsigned int		g;
 	unsigned int		b;
 }						t_color;
-
 
 // 自然光構造体
 // 1: double light_intensity -> 自然光の光の強さ range[0.0, 1.0]
@@ -148,7 +146,7 @@ typedef struct s_objects
 typedef struct s_vec_info
 {
 	double				t;
-  	t_vec       		inter_pos;
+	t_vec				inter_pos;
 	t_vec				normal;
 	t_vec				light_dir;
 	t_color				color;
@@ -159,21 +157,20 @@ typedef struct s_vec_info
 //2: t_vec dir -> レイの方向ベクトル
 typedef struct s_ray
 {
-  t_vec pos;
-  t_vec dir;
-}t_ray;
-
+	t_vec				pos;
+	t_vec				dir;
+}						t_ray;
 
 //スクリーンの基底ベクトル
 // 1: t_vec dsc -> カメラからスクリーンの中心へのベクトル
 // 2: t_vec esx ->
 // 3: t_vec esy ->
-typedef struct s_screen{
-	t_vec dsc;
-	t_vec esx;
-	t_vec esy;
-}t_screen;
-
+typedef struct s_screen
+{
+	t_vec				dsc;
+	t_vec				esx;
+	t_vec				esy;
+}						t_screen;
 
 // 円柱の法線ベクトルを描写&計算するために必要な情報セット
 // 1: t_in_out flag; -> 交点がin/out/nonのどれか
@@ -183,11 +180,11 @@ typedef struct s_screen{
 // 4: double p_c_n ->to_centert＊円柱軸ベクトル
 typedef struct s_cy_info
 {
-	t_in_out	flag;
-	double		t;
-  	t_vec       inter_pos;
-	t_vec		to_center;
-	double		p_c_n;
+	t_in_out			flag;
+	double				t;
+	t_vec				inter_pos;
+	t_vec				to_center;
+	double				p_c_n;
 }						t_cy_info;
 
 #endif

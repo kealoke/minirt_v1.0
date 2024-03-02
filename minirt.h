@@ -1,6 +1,5 @@
 #ifndef MINIRT_H
 # define MINIRT_H
-
 # include "errmsg.h"
 # include "struct.h"
 # include <fcntl.h>
@@ -10,13 +9,14 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <sys/types.h>
+
 # include "./gnl/get_next_line.h"
 # include "./libft/libft.h"
 
 # define WIDTH 800
 # define HEIGHT 800
 
-# define EPSILON 1.0/128.0
+# define EPSILON 1.0 / 128.0
 # define NON -1.0
 
 # define BACK_COLOR 0x00000000
