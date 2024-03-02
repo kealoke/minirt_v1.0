@@ -8,9 +8,9 @@ double	get_test_condition(t_vec pvc, t_ray ray, t_sphere *sp_obj)
 	double	c;
 	double	d;
 
-	a = inner_product(ray.dir, ray.dir);
-	b = inner_product(pvc, ray.dir) * 2;
-	c = inner_product(pvc, pvc) - sp_obj->diameter / 2 * sp_obj->diameter / 2;
+	a = inner_vec(ray.dir, ray.dir);
+	b = inner_vec(pvc, ray.dir) * 2;
+	c = inner_vec(pvc, pvc) - sp_obj->diameter / 2 * sp_obj->diameter / 2;
 	d = b * b - 4 * a * c;
 	if (d >= 0)
 	{

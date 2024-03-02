@@ -12,20 +12,25 @@ double	get_cy_intersection(t_ray ray, t_cylinder obj, bool first)
 	// a = ray.dir.x * ray.dir.x + ray.dir.z * ray.dir.z;
 	// b = 2 * (pvc.x * ray.dir.x + pvc.z * ray.dir.z);
 	// c = pvc.x * pvc.x + pvc.z * pvc.z - obj.height / 2 * obj.height / 2;
-	a = norm_vec(cross_product(ray.dir, obj.axis_vec));
+	a = norm_vec(cross_vec(ray.dir, obj.axis_vec));
 	a *= a;
-	b = 2 * inner_product(cross_product(ray.dir, obj.axis_vec), cross_product(pvc, obj.axis_vec));
-	c = norm_vec(cross_product(pvc, obj.axis_vec));
+	b = 2 * inner_vec(cross_vec(ray.dir, obj.axis_vec), cross_vec(pvc, obj.axis_vec));
+	c = norm_vec(cross_vec(pvc, obj.axis_vec));
 	c = c * c - obj.diameter/2 * obj.diameter/2;
 
 	d = b * b - 4 * a * c;
-	if (d == 0)
+	// if (d == 0)
+	// 	return ((-b - sqrt(d)) / (2 * a));
+	// else if (d > 0 && first)
+	// 	return ((-b - sqrt(d)) / (2 * a));
+	// else if (d > 0)
+	// 	return ((-b + sqrt(d)) / (2 * a));
+	if (d >= 0 && first)
 		return ((-b - sqrt(d)) / (2 * a));
-	else if (d > 0 && first)
-		return ((-b - sqrt(d)) / (2 * a));
-	else if (d > 0)
+	else if (d > 0 && first == false)
 		return ((-b + sqrt(d)) / (2 * a));
-	return (d);
+
+	return (NON);
 }
 
 void	get_cy_test_condition(t_cylinder *obj, t_ray ray, double h, t_cy_info *res)
@@ -47,22 +52,9 @@ void	get_cy_test_condition(t_cylinder *obj, t_ray ray, double h, t_cy_info *res)
 	t_vec center_to_out = sub_vec(p_out, obj->center_vec);
 	t_vec center_to_in = sub_vec(p_in, obj->center_vec);
 
-	diff_out = inner_product(center_to_out, obj->axis_vec);
-	diff_in = inner_product(center_to_in, obj->axis_vec);
-	// if ((-1 * harf_h) < diff_t1 && diff_t1 < harf_h && (-1* harf_h) < diff_t2
-	// 	&& diff_t2 < harf_h)
-	// {
-	// 	if (diff_t1 < diff_t2)
-	// 		return (t1);
-	// 	return (t2);
-	// }
-	// else if (-harf_h < diff_t1 && diff_t1 < harf_h)
-	// 	return (t1);
-	// else if (-harf_h < diff_t2 && diff_t2 < harf_h)
-	// {
-	// 	obj->inside = true;
-	// 	return (t2);
-	// }
+	diff_out = inner_vec(center_to_out, obj->axis_vec);
+	diff_in = inner_vec(center_to_in, obj->axis_vec);
+
 	if (0 <= diff_out && diff_out <= h)
 	{
 		res->flag = out;

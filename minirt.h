@@ -17,6 +17,7 @@
 # define HEIGHT 800
 
 # define EPSILON 1.0/128.0
+# define NON -1.0
 
 # define BACK_COLOR 0x00000000
 
@@ -73,8 +74,8 @@ int				key(int key_code, t_mlx *mlx);
 void			my_mlx_pixel_put(t_mlx *data, int x, int y, int color);
 void			set_mlx(t_mlx *mlx);
 
-double			inner_product(t_vec a, t_vec b);
-t_vec			cross_product(t_vec a, t_vec b);
+double			inner_vec(t_vec a, t_vec b);
+t_vec			cross_vec(t_vec a, t_vec b);
 t_vec			add_vec(t_vec a, t_vec b);
 t_vec			sub_vec(t_vec a, t_vec b);
 t_vec			mul_vec(t_vec a, double b);

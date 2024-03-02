@@ -17,7 +17,7 @@ t_screen	get_screen_vec(t_minirt *world)
 	res.esx.z = -res.dsc.x / sqrt(res.dsc.z * res.dsc.z + res.dsc.x
 			* res.dsc.x);
 	res.esx = vec_normalize(res.esx);
-	res.esy = vec_normalize(cross_product(res.dsc, res.esx));
+	res.esy = vec_normalize(cross_vec(res.dsc, res.esx));
 	return (res);
 }
 

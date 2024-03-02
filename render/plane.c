@@ -15,11 +15,11 @@ t_vec_info	pl_intersection(t_minirt *world, t_objects tmp_o_list, t_ray ray)
 	pl_obj = tmp_o_list.content;
 	//視点（カメラ）と物体の距離
 	s_vec = sub_vec(ray.pos, pl_obj->pos_vec);
-	denom = inner_product(ray.dir, pl_obj->normal_vec);
+	denom = inner_vec(ray.dir, pl_obj->normal_vec);
 	// 1e-6は0に非常に近い値を表す閾値
 	if (fabs(denom) > 1e-6)
 	{
-		res.t = (-(inner_product(s_vec, pl_obj->normal_vec) / denom));
+		res.t = (-(inner_vec(s_vec, pl_obj->normal_vec) / denom));
 		if (res.t >= 0)
 		{
 			res.normal = vec_normalize(pl_obj->normal_vec);

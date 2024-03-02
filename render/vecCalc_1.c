@@ -1,13 +1,13 @@
 #include "../minirt.h"
 
 //内積を計算
-double	inner_product(t_vec a, t_vec b)
+double	inner_vec(t_vec a, t_vec b)
 {
 	return (a.x * b.x + a.y * b.y + a.z * b.z);
 }
 
 //外積を計算
-t_vec	cross_product(t_vec a, t_vec b)
+t_vec	cross_vec(t_vec a, t_vec b)
 {
 	t_vec	res;
 
@@ -40,7 +40,7 @@ t_vec	vec_normalize(t_vec a)
 	t_vec	res;
 	double	mag;
 
-	mag = sqrt(inner_product(a, a));
+	mag = sqrt(inner_vec(a, a));
 	res.x = a.x / mag;
 	res.y = a.y / mag;
 	res.z = a.z / mag;
