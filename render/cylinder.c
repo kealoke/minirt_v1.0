@@ -9,9 +9,6 @@ double	get_cy_intersection(t_ray ray, t_cylinder obj, bool first)
 	t_vec	pvc;
 
 	pvc = sub_vec(ray.pos, obj.center_vec);
-	// a = ray.dir.x * ray.dir.x + ray.dir.z * ray.dir.z;
-	// b = 2 * (pvc.x * ray.dir.x + pvc.z * ray.dir.z);
-	// c = pvc.x * pvc.x + pvc.z * pvc.z - obj.height / 2 * obj.height / 2;
 	a = norm_vec(cross_vec(ray.dir, obj.axis_vec));
 	a *= a;
 	b = 2 * inner_vec(cross_vec(ray.dir, obj.axis_vec), cross_vec(pvc, obj.axis_vec));
@@ -19,12 +16,6 @@ double	get_cy_intersection(t_ray ray, t_cylinder obj, bool first)
 	c = c * c - obj.diameter/2 * obj.diameter/2;
 
 	d = b * b - 4 * a * c;
-	// if (d == 0)
-	// 	return ((-b - sqrt(d)) / (2 * a));
-	// else if (d > 0 && first)
-	// 	return ((-b - sqrt(d)) / (2 * a));
-	// else if (d > 0)
-	// 	return ((-b + sqrt(d)) / (2 * a));
 	if (d >= 0 && first)
 		return ((-b - sqrt(d)) / (2 * a));
 	else if (d > 0 && first == false)
@@ -33,56 +24,43 @@ double	get_cy_intersection(t_ray ray, t_cylinder obj, bool first)
 	return (NON);
 }
 
+t_cy_info get_cy_intersection_info(t_ray ray, t_cylinder *obj, bool first) {
+	t_cy_info res;
+
+	res.t = get_cy_intersection(ray, *obj, first);
+	res.inter_pos = add_vec(ray.pos, mul_vec(ray.dir, res.t));
+	// レイと無限円柱の交点
+	res.to_center = sub_vec(res.inter_pos, obj->center_vec);
+	res.p_c_n = inner_vec(res.to_center, obj->axis_vec);
+	if (first)
+		res.flag = out;
+	else
+		res.flag = in;
+	return res;
+}
+
 void	get_cy_test_condition(t_cylinder *obj, t_ray ray, double h, t_cy_info *inter)
 {
-	double	t1;
-	double	t2;
-	double	diff_out;
-	double	diff_in;
+	t_cy_info inner_intersection;
+	t_cy_info outer_intersection;
 
-	t1 = get_cy_intersection(ray, *obj, true);
-	t2 = get_cy_intersection(ray, *obj, false);
-	// diff_t1 = obj->center_vec.y - add_vec(ray.pos, mul_vec(ray.dir, t1)).y;
-	// diff_t2 = obj->center_vec.y - add_vec(ray.pos, mul_vec(ray.dir, t2)).y;
-
-	t_vec p_out = add_vec(ray.pos, mul_vec(ray.dir, t1));
-	t_vec p_in = add_vec(ray.pos, mul_vec(ray.dir, t2));
-
-	//レイと無限円柱の交点
-	t_vec center_to_out = sub_vec(p_out, obj->center_vec);
-	t_vec center_to_in = sub_vec(p_in, obj->center_vec);
-
-	diff_out = inner_vec(center_to_out, obj->axis_vec);
-	diff_in = inner_vec(center_to_in, obj->axis_vec);
-	// if ((-1 * harf_h) < diff_t1 && diff_t1 < harf_h && (-1* harf_h) < diff_t2
-	// 	&& diff_t2 < harf_h)
-	// {
-	// 	if (diff_t1 < diff_t2)
-	// 		return (t1);
-	// 	return (t2);
-	// }
-	// else if (-harf_h < diff_t1 && diff_t1 < harf_h)
-	// 	return (t1);
-	// else if (-harf_h < diff_t2 && diff_t2 < harf_h)
-	// {
-	// 	obj->inside = true;
-	// 	return (t2);
-	// }
-	if (-h/2 <= diff_out && diff_out <= h/2 && t1 > 0)
+	outer_intersection = get_cy_intersection_info(ray, obj, true);
+	inner_intersection = get_cy_intersection_info(ray, obj, false);
+	if (-h/2 <= outer_intersection.p_c_n && outer_intersection.p_c_n <= h/2 && outer_intersection.t > 0)
 	{
-		inter->flag = out;
-		inter->t = t1;
-		inter->inter_pos = p_out;
-		inter->to_center = center_to_out;
-		inter->p_c_n = diff_out;
+		inter->flag = outer_intersection.flag;
+		inter->t = outer_intersection.t;
+		inter->inter_pos = outer_intersection.inter_pos;
+		inter->to_center = outer_intersection.to_center;
+		inter->p_c_n = outer_intersection.p_c_n;
 	}
-	else if (-h/2 <= diff_in && diff_in <= h/2 && t2 > 0)
+	else if (-h/2 <= inner_intersection.p_c_n && inner_intersection.p_c_n <= h/2 && inner_intersection.t > 0)
 	{
-		inter->flag = in;
-		inter->t = t2;
-		inter->inter_pos = p_in;
-		inter->to_center = center_to_in;
-		inter->p_c_n = diff_in;
+		inter->flag = inner_intersection.flag;
+		inter->t = inner_intersection.t;
+		inter->inter_pos = inner_intersection.inter_pos;
+		inter->to_center = inner_intersection.to_center;
+		inter->p_c_n = inner_intersection.p_c_n;
 	}
 	else
 		inter->flag = non;
@@ -101,13 +79,10 @@ t_vec_info	cy_intersecton(t_minirt *world, t_objects tmp_o_list, t_ray ray)
 	t_vec			inter_to_center;
 
 	cy_obj = tmp_o_list.content;
-	// cy_obj->inside = false;
 	get_cy_test_condition(cy_obj, ray, cy_obj->height, &inter);
 	// Dが０以上なら交点を持つ、0以上かつy軸距離が[−ℎ2,ℎ2]の範囲内である場合のみ交点を持つ
 	if (inter.flag == non)
-	{
 		res.t = -1.0;
-	}
 	else
 	{
 		res.t = inter.t;
@@ -115,13 +90,9 @@ t_vec_info	cy_intersecton(t_minirt *world, t_objects tmp_o_list, t_ray ray)
 		res.inter_pos = inter.inter_pos;
 		//交点から円柱の中心
 		if (inter.flag == in)
-		{
 			inter_to_center = sub_vec(mul_vec(cy_obj->axis_vec, inter.p_c_n),inter.to_center);
-		}
 		else if (inter.flag == out)
-		{
 			inter_to_center = sub_vec(inter.to_center,mul_vec(cy_obj->axis_vec, inter.p_c_n));
-		}
 		//法線ベクトルを求める
 		// 法線ベクトルを正規化
 		res.normal = vec_normalize(inter_to_center);
