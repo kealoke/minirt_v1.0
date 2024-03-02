@@ -16,7 +16,6 @@
 # define WIDTH 800
 # define HEIGHT 800
 
-# define EPSILON 1.0 / 128.0
 # define NON -1.0
 
 # define BACK_COLOR 0x00000000
@@ -26,6 +25,8 @@
 # define SUP_K 1
 
 # define ESC 53
+
+# define EPSILON 1.0/128.0
 
 //描写に必要な全体の情報をもつ
 //2: t_ambient amb -> 自然光情報
@@ -51,7 +52,6 @@ bool			is_match(char *s1, char *s2);
 
 bool			input_check(int argc, char **argv);
 bool			check_vec_range(t_vec vec);
-bool			check_color_range(unsigned color, char *str);
 void			parse_line(char *line, t_minirt *world, t_read_flag *flag);
 void			open_and_read(char *file, t_minirt *world);
 void			set_vec(char *str, t_vec *vec);
