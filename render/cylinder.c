@@ -33,7 +33,7 @@ double	get_cy_intersection(t_ray ray, t_cylinder obj, bool first)
 	return (NON);
 }
 
-void	get_cy_test_condition(t_cylinder *obj, t_ray ray, double h, t_cy_info *res)
+void	get_cy_test_condition(t_cylinder *obj, t_ray ray, double h, t_cy_info *inter)
 {
 	double	t1;
 	double	t2;
@@ -54,25 +54,38 @@ void	get_cy_test_condition(t_cylinder *obj, t_ray ray, double h, t_cy_info *res)
 
 	diff_out = inner_vec(center_to_out, obj->axis_vec);
 	diff_in = inner_vec(center_to_in, obj->axis_vec);
-
-	if (0 <= diff_out && diff_out <= h)
+	// if ((-1 * harf_h) < diff_t1 && diff_t1 < harf_h && (-1* harf_h) < diff_t2
+	// 	&& diff_t2 < harf_h)
+	// {
+	// 	if (diff_t1 < diff_t2)
+	// 		return (t1);
+	// 	return (t2);
+	// }
+	// else if (-harf_h < diff_t1 && diff_t1 < harf_h)
+	// 	return (t1);
+	// else if (-harf_h < diff_t2 && diff_t2 < harf_h)
+	// {
+	// 	obj->inside = true;
+	// 	return (t2);
+	// }
+	if (-h/2 <= diff_out && diff_out <= h/2 && t1 > 0)
 	{
-		res->flag = out;
-		res->t = t1;
-		res->inter_pos = p_out;
-		res->to_center = center_to_out;
-		res->p_c_n = diff_out;
+		inter->flag = out;
+		inter->t = t1;
+		inter->inter_pos = p_out;
+		inter->to_center = center_to_out;
+		inter->p_c_n = diff_out;
 	}
-	else if (0 <= diff_in && diff_in <= h)
+	else if (-h/2 <= diff_in && diff_in <= h/2 && t2 > 0)
 	{
-		res->flag = in;
-		res->t = t2;
-		res->inter_pos = p_in;
-		res->to_center = center_to_in;
-		res->p_c_n = diff_in;
+		inter->flag = in;
+		inter->t = t2;
+		inter->inter_pos = p_in;
+		inter->to_center = center_to_in;
+		inter->p_c_n = diff_in;
 	}
 	else
-		res->flag = non;
+		inter->flag = non;
 }
 
 //円柱のオブジェクトとレイの交差判定をしてベクトル情報を返す
@@ -97,6 +110,7 @@ t_vec_info	cy_intersecton(t_minirt *world, t_objects tmp_o_list, t_ray ray)
 	}
 	else
 	{
+		res.t = inter.t;
 		//交点位置
 		res.inter_pos = inter.inter_pos;
 		//交点から円柱の中心
