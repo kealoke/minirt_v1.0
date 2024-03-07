@@ -6,7 +6,7 @@
 /*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 18:32:09 by yushimom          #+#    #+#             */
-/*   Updated: 2024/03/07 17:22:57 by yushimom         ###   ########.fr       */
+/*   Updated: 2024/03/07 18:02:39 by yushimom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	set_camera(char **token, t_minirt *world, t_read_flag *flag)
 	set_vec(token[2], &(world->cam->ori_vec));
 	if (check_vec_range(world->cam->ori_vec) == false)
 		err_and_exit(CAM_VEC_ERR);
+	adjust_cam_vec(&(world->cam->ori_vec));
 	world->cam->fov = atoi_and_check(token[3]);
 	if (world->cam->fov < 0 || 180 < world->cam->fov)
 		err_and_exit(CAM_FOV_ERR);

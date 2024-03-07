@@ -6,7 +6,7 @@
 /*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 18:38:03 by yushimom          #+#    #+#             */
-/*   Updated: 2024/03/07 17:41:39 by yushimom         ###   ########.fr       */
+/*   Updated: 2024/03/07 18:01:00 by yushimom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ void			set_plane(char **token, t_minirt *world, t_read_flag *flag);
 void			set_cylinder(char **token, t_minirt *world, t_read_flag *flag);
 void			*my_malloc(size_t size);
 double			get_number(char *str, int *i, int *j);
-int atoi_and_check(const char *str);
+int				atoi_and_check(const char *str);
+void			adjust_cam_vec(t_vec *vec);
 
 t_objects		*objnew(void *content);
 int				get_obj_size(t_objects *list);
