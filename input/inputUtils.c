@@ -6,7 +6,7 @@
 /*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 18:32:21 by yushimom          #+#    #+#             */
-/*   Updated: 2024/03/07 17:50:58 by yushimom         ###   ########.fr       */
+/*   Updated: 2024/03/07 18:04:04 by yushimom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ unsigned int	string_to_int(char **str, char c)
 		return (ans);
 	while (**str && **str != '\n' && **str != c)
 	{
-		if(!ft_isdigit(**str))
+		if (!ft_isdigit(**str))
 			err_and_exit(NON_NUM);
 		if (ans > (DBL_MAX / 10))
 			err_and_exit("float overflow\n");
@@ -67,7 +67,7 @@ double	ft_atod(char *str)
 		++str;
 		while (*str && *str != '\n')
 		{
-			if(!ft_isdigit(*str))
+			if (!ft_isdigit(*str))
 				err_and_exit(NON_NUM);
 			if (ans > DBL_MAX - (*str - '0') * fraction)
 				err_and_exit("float overflow\n");

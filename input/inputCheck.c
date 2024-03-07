@@ -6,7 +6,7 @@
 /*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 18:31:52 by yushimom          #+#    #+#             */
-/*   Updated: 2024/03/07 18:00:44 by yushimom         ###   ########.fr       */
+/*   Updated: 2024/03/07 18:03:51 by yushimom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ bool	check_vec_range(t_vec vec)
 	return (true);
 }
 
-
-void adjust_cam_vec(t_vec *vec){
-	if(vec->x == 0 && vec->z == 0){
-		if(vec->y == 1 || vec->y == -1){
+void	adjust_cam_vec(t_vec *vec)
+{
+	if (vec->x == 0 && vec->z == 0)
+	{
+		if (vec->y == 1 || vec->y == -1)
 			vec->x = 0.0001;
-		}
 	}
 }
