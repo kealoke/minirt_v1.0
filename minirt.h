@@ -12,9 +12,14 @@
 # include <sys/types.h>
 # include "./gnl/get_next_line.h"
 # include "./libft/libft.h"
+# include <limits.h>
 
 # define WIDTH 800
 # define HEIGHT 800
+
+# if WIDTH <= 0 || HEIGHT <= 0 || WIDTH > INT_MAX || HEIGHT > INT_MAX
+# error "WIDTHとHEIGHTは0より大きくINT_MAXより小さい数で指定してください"
+# endif
 
 # define EPSILON 1.0/128.0
 # define NON -1.0
