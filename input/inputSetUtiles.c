@@ -6,7 +6,7 @@
 /*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 18:32:17 by yushimom          #+#    #+#             */
-/*   Updated: 2024/03/02 18:32:18 by yushimom         ###   ########.fr       */
+/*   Updated: 2024/03/07 17:51:33 by yushimom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,18 +58,33 @@ bool	set_rgb_color(char *str, t_color *color)
 	char	*tmp;
 
 	tmp = str;
-	color->r = string_to_int(&str);
+	color->r = string_to_int(&str, ',');
 	if (255 < color->r || (*tmp != '0' && color->r == 0))
 		return (false);
 	str++;
 	tmp = str;
-	color->g = string_to_int(&str);
+	color->g = string_to_int(&str, ',');
 	if (255 < color->g || (*tmp != '0' && color->g == 0))
 		return (false);
 	str++;
 	tmp = str;
-	color->b = string_to_int(&str);
+	color->b = string_to_int(&str, ',');
 	if (255 < color->b || (*tmp != '0' && color->b == 0))
 		return (false);
 	return (true);
+}
+
+// atoiで変換かつ数字チェックをする
+int atoi_and_check(const char *str){
+	int res;
+	char *tmp = (char *)str;
+
+	while(tmp && *tmp != '\n'){
+		if(!ft_isdigit(*tmp))
+			err_and_exit(NON_NUM);
+		tmp++;
+	}
+	printf("%s\n", str);
+	res = ft_atoi(str);
+	return res;
 }

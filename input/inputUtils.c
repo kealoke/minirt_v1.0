@@ -6,7 +6,7 @@
 /*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 18:32:21 by yushimom          #+#    #+#             */
-/*   Updated: 2024/03/02 18:32:22 by yushimom         ###   ########.fr       */
+/*   Updated: 2024/03/07 17:50:58 by yushimom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,17 @@
 // 文字列の先頭か数字までをintの数値にして返す
 //  char *str=255,0,0 -> return (int)255
 // 1:char **str -> 変換したい数字を先頭に含む文字列
-unsigned int	string_to_int(char **str)
+unsigned int	string_to_int(char **str, char c)
 {
 	int	ans;
 
 	ans = 0;
 	if (!*str)
 		return (ans);
-	while (ft_isdigit(**str))
+	while (**str && **str != '\n' && **str != c)
 	{
+		if(!ft_isdigit(**str))
+			err_and_exit(NON_NUM);
 		if (ans > (DBL_MAX / 10))
 			err_and_exit("float overflow\n");
 		ans = ans * 10 + **str - '0';
@@ -58,13 +60,15 @@ double	ft_atod(char *str)
 		return (0);
 	sign = get_sign(&str);
 	ans = 0;
-	ans = string_to_int(&str);
+	ans = string_to_int(&str, '.');
 	fraction = 0.1;
 	if (*str == '.')
 	{
 		++str;
-		while (ft_isdigit(*str))
+		while (*str && *str != '\n')
 		{
+			if(!ft_isdigit(*str))
+				err_and_exit(NON_NUM);
 			if (ans > DBL_MAX - (*str - '0') * fraction)
 				err_and_exit("float overflow\n");
 			ans += (*str - '0') * fraction;

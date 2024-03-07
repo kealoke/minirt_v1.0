@@ -6,7 +6,7 @@
 /*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 18:38:03 by yushimom          #+#    #+#             */
-/*   Updated: 2024/03/02 18:38:05 by yushimom         ###   ########.fr       */
+/*   Updated: 2024/03/07 17:41:39 by yushimom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void			err_and_exit(char *msg);
 int				input_error(char *msg);
 
 double			ft_atod(char *str);
-unsigned int	string_to_int(char **str);
+unsigned int	string_to_int(char **str, char c);
 bool			is_match(char *s1, char *s2);
 
 bool			input_check(int argc, char **argv);
@@ -74,6 +74,7 @@ void			set_plane(char **token, t_minirt *world, t_read_flag *flag);
 void			set_cylinder(char **token, t_minirt *world, t_read_flag *flag);
 void			*my_malloc(size_t size);
 double			get_number(char *str, int *i, int *j);
+int atoi_and_check(const char *str);
 
 t_objects		*objnew(void *content);
 int				get_obj_size(t_objects *list);

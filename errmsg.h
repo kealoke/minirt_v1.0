@@ -6,7 +6,7 @@
 /*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 18:37:54 by yushimom          #+#    #+#             */
-/*   Updated: 2024/03/02 18:37:57 by yushimom         ###   ########.fr       */
+/*   Updated: 2024/03/07 17:27:30 by yushimom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,5 @@
 
 # define RGB_ERR "RGB is invalid value\n"
 
+# define NON_NUM "value contains non-numeric.\n"
 #endif
