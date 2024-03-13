@@ -71,6 +71,8 @@ bool	set_rgb_color(char *str, t_color *color)
 	color->b = string_to_int(&str, ',');
 	if (255 < color->b || (*tmp != '0' && color->b == 0))
 		return (false);
+	if (*str != '\0' && *str != '\n')
+		return (false);
 	return (true);
 }
 
