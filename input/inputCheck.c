@@ -31,7 +31,7 @@ bool	input_check(int argc, char **argv)
 {
 	if (argc < 2 || 3 < argc)
 		return (input_error(USAGE));
-	if (!ft_strnstr(argv[1], ".rt", ft_strlen(argv[1])))
+	if (!ft_strnstr(argv[1], ".rt", ft_strlen(argv[1])) || (ft_strnstr(argv[1], ".rt", ft_strlen(argv[1])) && ft_strlen(argv[1]) == 3))
 		return (input_error("Error: input argument is not correct\n"));
 	return (true);
 }
@@ -46,6 +46,8 @@ bool	check_vec_range(t_vec vec)
 	if (vec.y < -1.0 || 1.0 < vec.y)
 		return (false);
 	if (vec.z < -1.0 || 1.0 < vec.z)
+		return (false);
+	if (norm_vec(vec) > 1)
 		return (false);
 	return (true);
 }
