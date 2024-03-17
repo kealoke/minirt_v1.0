@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inputCheck.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smaei <smaei@student.42.fr>                +#+  +:+       +#+        */
+/*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 18:31:52 by yushimom          #+#    #+#             */
-/*   Updated: 2024/03/17 15:05:45 by smaei            ###   ########.fr       */
+/*   Updated: 2024/03/17 15:29:24 by yushimom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,15 @@ bool	input_check(int argc, char **argv)
 	while (file_path[size] != '\0')
 		size++;
 	filename_size = ft_strlen(file_path[size - 1]);
-	if (!ft_strnstr(file_path[size - 1], ".rt", ft_strlen(file_path[size - 1]))) {
+	if (!ft_strnstr(file_path[size - 1], ".rt", ft_strlen(file_path[size - 1])))
+	{
 		free_double_array(file_path);
 		return (input_error("Error: input argument is not correct\n"));
 	}
 	if (ft_strlen(file_path[size - 1]) == 3
-		|| !is_match(&file_path[size - 1][filename_size - 3], ".rt")) {
-		free_double_array(file_path);	
+		|| !is_match(&file_path[size - 1][filename_size - 3], ".rt"))
+	{
+		free_double_array(file_path);
 		return (input_error("Error: input argument is not correct\n"));
 	}
 	free_double_array(file_path);
