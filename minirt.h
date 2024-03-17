@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
+/*   By: smaei <smaei@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 18:38:03 by yushimom          #+#    #+#             */
-/*   Updated: 2024/03/07 18:01:00 by yushimom         ###   ########.fr       */
+/*   Updated: 2024/03/17 14:48:47 by smaei            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,4 +117,6 @@ double			get_diffuse(t_minirt *world, t_vec_info closest_obj);
 double			get_supecular(t_minirt *world, t_vec_info closest_obj,
 					t_vec dir_vec);
 bool			check_shadow(t_minirt *world, t_vec_info obj);
+
+void			free_double_array(char **token);
 #endif

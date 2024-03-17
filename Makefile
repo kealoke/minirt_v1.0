@@ -1,7 +1,7 @@
 NAME = minirt
 CC = gcc
 CFLAGS = -MMD -MP -g
-OPTION = -L./mlx -lmlx -framework OpenGL -framework Appkit
+OPTION = -lmlx -framework OpenGL -framework Appkit
 OBJ_DIR = ./objs
 SRC_DIR = ./input ./gnl ./render
 
@@ -9,7 +9,7 @@ SRCS = main.c \
 		get_next_line.c get_next_line_utils.c \
  		inputCheck.c inputParse.c inputRead.c inputSet.c inputSetUtiles.c inputSetObjs.c inputUtils.c \
 		render.c mlx.c obj_list.c colorCalc_1.c colorCalc_2.c vecCalc_1.c vecCalc_2.c \
-		plane.c sphere.c cylinder.c intersection.c reflection.c shadow.c
+		plane.c sphere.c cylinder.c intersection.c reflection.c shadow.c inputError.c
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
 DEPS = $(OBJS:.o=.d)
 
@@ -21,7 +21,7 @@ all: $(NAME)
 
 $(OBJ_DIR)/%.o: %.c
 	mkdir -p $(@D)
-	$(CC) $(CFLAGS) -I ./mlx -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	mkdir -p $(@D)

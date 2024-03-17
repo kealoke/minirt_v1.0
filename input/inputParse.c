@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   inputParse.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
+/*   By: smaei <smaei@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 18:32:00 by yushimom          #+#    #+#             */
-/*   Updated: 2024/03/02 18:32:03 by yushimom         ###   ########.fr       */
+/*   Updated: 2024/03/17 14:48:47 by smaei            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minirt.h"
 
 // splitで確保したtokenをフリーする
-void	free_token(char **token)
+void	free_double_array(char **token)
 {
 	int	i;
 
@@ -48,5 +48,5 @@ void	parse_line(char *line, t_minirt *world, t_read_flag *flag)
 		set_plane(token, world, flag);
 	else if (is_match(token[0], "cy"))
 		set_cylinder(token, world, flag);
-	free_token(token);
+	free_double_array(token);
 }

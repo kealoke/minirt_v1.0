@@ -3,36 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   inputCheck.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
+/*   By: smaei <smaei@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 18:31:52 by yushimom          #+#    #+#             */
-/*   Updated: 2024/03/07 18:03:51 by yushimom         ###   ########.fr       */
+/*   Updated: 2024/03/17 15:05:45 by smaei            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minirt.h"
-
-int	input_error(char *msg)
-{
-	printf("%s", msg);
-	return (false);
-}
-
-void	err_and_exit(char *msg)
-{
-	printf("Error: %s", msg);
-	exit(EXIT_FAILURE);
-}
 
 // 入力チェックする関数
 // 1: int argc -> mainのargc
 // 2: char **argv -> mainのargv
 bool	input_check(int argc, char **argv)
 {
+	char	**file_path;
+	int		size;
+	int		filename_size;
+
 	if (argc < 2 || 3 < argc)
 		return (input_error(USAGE));
-	if (!ft_strnstr(argv[1], ".rt", ft_strlen(argv[1])) || (ft_strnstr(argv[1], ".rt", ft_strlen(argv[1])) && ft_strlen(argv[1]) == 3))
+	file_path = ft_split(argv[1], '/');
+	size = 0;
+	while (file_path[size] != '\0')
+		size++;
+	filename_size = ft_strlen(file_path[size - 1]);
+	if (!ft_strnstr(file_path[size - 1], ".rt", ft_strlen(file_path[size - 1]))) {
+		free_double_array(file_path);
 		return (input_error("Error: input argument is not correct\n"));
+	}
+	if (ft_strlen(file_path[size - 1]) == 3
+		|| !is_match(&file_path[size - 1][filename_size - 3], ".rt")) {
+		free_double_array(file_path);	
+		return (input_error("Error: input argument is not correct\n"));
+	}
+	free_double_array(file_path);
 	return (true);
 }
 
