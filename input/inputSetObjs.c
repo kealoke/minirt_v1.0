@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inputSetObjs.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yushimom <yushimom@student.42.fr>          +#+  +:+       +#+        */
+/*   By: smaei <smaei@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 18:32:13 by yushimom          #+#    #+#             */
-/*   Updated: 2024/03/02 18:32:15 by yushimom         ###   ########.fr       */
+/*   Updated: 2024/03/22 22:08:55 by smaei            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	set_sphere(char **token, t_minirt *world, t_read_flag *flag)
 
 	if (!token[1] || !token[2] || !token[3])
 		err_and_exit("Sphere value is not enough\n");
+	if (token[4] && token[4][0] != '\0' && token[4][0] != '\n')
+		err_and_exit("Sphere value is many\n");
 	sp = my_malloc(sizeof(t_sphere));
 	set_vec(token[1], &(sp->center_vec));
 	sp->diameter = ft_atod(token[2]);
@@ -48,6 +50,8 @@ void	set_plane(char **token, t_minirt *world, t_read_flag *flag)
 
 	if (!token[1] || !token[2] || !token[3])
 		err_and_exit("Plane value is not enough\n");
+	if (token[4] && token[4][0] != '\0' && token[4][0] != '\n')
+		err_and_exit("Plane value is many\n");
 	pl = my_malloc(sizeof(t_plane));
 	set_vec(token[1], &(pl->pos_vec));
 	set_vec(token[2], &(pl->normal_vec));
@@ -74,6 +78,8 @@ void	set_cylinder(char **token, t_minirt *world, t_read_flag *flag)
 
 	if (!token[1] || !token[2] || !token[3] || !token[4] || !token[5])
 		err_and_exit("Cylinder value is not enough\n");
+	if (token[6] && token[6][0] != '\0' && token[6][0] != '\n')
+		err_and_exit("Cylinder value is many\n");
 	cy = my_malloc(sizeof(t_cylinder));
 	set_vec(token[1], &(cy->center_vec));
 	set_vec(token[2], &(cy->axis_vec));
